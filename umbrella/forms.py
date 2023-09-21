@@ -12,12 +12,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign up')
 
     def validate_username(self, username):
-        user = User.query_users(User(), 'username', 'ASC', username)
+        user = User.query_users(User(), ('username', username))
         if user:
             raise ValidationError('An account with that username exists; choose a different one.')
 
     def validate_email(self, email):
-        user = User.query_users(User(), 'email', 'ASC', email)
+        user = User.query_users(User(), ('email', email))
         if user:
             raise ValidationError('An account with that email exists; choose a different one.')
 
