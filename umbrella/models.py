@@ -10,7 +10,7 @@ class DBModel():
 class User(DBModel):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
-        ("username", "varchar(255)", "NOT NULL"),
+        ("username", "varchar(255)", "UNIQUE NOT NULL"),
         ("email", "varchar(255)", "UNIQUE NOT NULL"),
         ("password", "varchar(255)", "UNIQUE NOT NULL"),
         ("bio", "varchar(511)"),
