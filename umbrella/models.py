@@ -39,20 +39,21 @@ class User(DBModel, UserMixin):
     def __str__(self):
         return self.username.get_content() + ' User'
 
-    def read_user_rows(self, id=None):
-        if id:
-            query = "SELECT * FROM profile WHERE id = %s AND is_deleted = False"
-            params = [id]
-            rows = db_interface.run_query(query, params)
+    def read_user_rows(self, cond=None):
+        if cond:
+            query = "SELECT * FROM profile WHERE {} = %s AND is_deleted = False"
+            params = [cond[1]]
+            field_param = cond[0]
+            rows = db_interface.run_query(query, params, field_param)
             return rows
 
         query = "SELECT * FROM profile WHERE is_deleted = False"
         rows = db_interface.run_query(query)
         return rows
 
-    def query_users(self, user_id=None):
-        if user_id:
-            row = self.read_user_rows(user_id)
+    def query_users(self, user_filter=None):
+        if user_filter:
+            row = self.read_user_rows(user_filter)
 
             user = User()
 
