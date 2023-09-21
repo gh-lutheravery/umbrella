@@ -2,7 +2,7 @@ from flask import render_template, url_for, flash, redirect
 from umbrella import app, bcrypt
 from umbrella.forms import RegistrationForm, LoginForm
 from umbrella.models import User
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required
 
 
 @app.route("/")
@@ -43,6 +43,12 @@ def login():
 
     return render_template('login.html', title='Login', form=form)
 
+
 @app.route("/logout")
 def logout():
     logout_user()
+
+@app.route("/profile")
+@login_required
+def profile():
+    return render_template('profile.html', title='Profile')
