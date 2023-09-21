@@ -16,7 +16,7 @@ def open_conn():
     return conn
 
 
-def run_query(query: str, params=None, field_flag=False, field_param=None):
+def run_query(query: str, params=None, field_param=None):
     with open_conn() as conn:
         cursor = conn.cursor()
 
@@ -25,7 +25,7 @@ def run_query(query: str, params=None, field_flag=False, field_param=None):
 
         #pinned tab
         if params:
-            if field_flag:
+            if field_param:
                 cursor.execute(SQL.SQL(query).format(SQL.Identifier(field_param)), params)
             else:
                 cursor.execute(query, params)
