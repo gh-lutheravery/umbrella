@@ -1,11 +1,15 @@
 import umbrella.db_interface as db_interface
+from umbrella import login_manager
 import datetime
+
 
 
 class DBModel():
     table_name = ""
     is_deleted = False
 
+def load_user(user_id):
+    return User.query_users(User(), user_id)
 
 class User(DBModel):
     db_columns = [
@@ -31,18 +35,24 @@ class User(DBModel):
     def __str__(self):
         return self.username.get_content() + ' User'
 
-    def read_user_rows(self):
+    def read_user_rows(self, id=None):
+        if id:
+            query = "SELECT * FROM profile WHERE id = %s AND is_deleted = False"
+            params = [id]
+            rows = db_interface.run_query(query, params)
+            return rows
+
         query = "SELECT * FROM profile WHERE is_deleted = False"
         rows = db_interface.run_query(query)
         return rows
 
-    def query_users(self, order_by, order_dir, user_id=None):
+    def query_users(self, user_id=None):
         if user_id:
-            row = self.read_user_rows()
+            row = self.read_user_rows(user_id)
 
             user = User()
 
-            id, username, email, _, bio, join_date = row
+            id, username, email, _, bio, join_date = row[0]
 
             user.id = id
             user.username = username
@@ -62,7 +72,7 @@ class User(DBModel):
             user.username = username
             user.email = email
             user.bio = bio
-            user.join_date = ModelDate().set_date(join_date)
+            user.join_date = join_date
 
             users.append(user)
 
