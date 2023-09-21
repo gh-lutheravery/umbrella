@@ -1,5 +1,6 @@
 import umbrella.db_interface as db_interface
 from umbrella import login_manager
+from flask_login import UserMixin
 import datetime
 
 
@@ -8,10 +9,13 @@ class DBModel():
     table_name = ""
     is_deleted = False
 
+
+@login_manager.user_loader
 def load_user(user_id):
     return User.query_users(User(), user_id)
 
-class User(DBModel):
+
+class User(DBModel, UserMixin):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
         ("username", "varchar(255)", "UNIQUE NOT NULL"),
