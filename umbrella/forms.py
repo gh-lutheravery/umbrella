@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from umbrella.models import User
+import umbrella.models as models
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
@@ -12,12 +12,14 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign up')
 
     def validate_username(self, username):
-        user = User.query_users(User(), ('username', username))
+        user = models.read_rows('profile', ('username', username))
+
         if user:
             raise ValidationError('An account with that username exists; choose a different one.')
 
     def validate_email(self, email):
-        user = User.query_users(User(), ('email', email))
+        user = models.read_rows('profile', ('email', email))
+
         if user:
             raise ValidationError('An account with that email exists; choose a different one.')
 
