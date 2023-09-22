@@ -212,10 +212,10 @@ class Post(DBModel, UserMixin):
         rows = read_rows('profile')
         users = []
         for r in rows:
-            id, username, email, _, bio, join_date = r
+            id, title, content, created_at, view_count, author_id, _ = r
 
-            user = User(username, None, email, bio)
-            user.set_date(join_date)
+            user = Post(title, content, view_count, author_id)
+            user.set_date(created_at)
             user.set_id(id)
 
             users.append(user)
