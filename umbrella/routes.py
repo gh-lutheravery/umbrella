@@ -1,6 +1,6 @@
-from flask import render_template, url_for, flash, redirect
+from flask import render_template, url_for, flash, redirect, request
 from umbrella import app, bcrypt
-from umbrella.forms import RegistrationForm, LoginForm
+from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm
 import umbrella.models as models
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -60,8 +60,17 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/profile")
+@app.route("/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
-    return render_template('profile.html', title='Profile')
+    form = UpdateProfileForm()
+    if form.validate_on_submit():
+        models.update_row(form, 'profile', ('id', current_user.id))
+        flash('Profile has been updated.')
+        return redirect(url_for('profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+
+    return render_template('profile.html', title='Profile', form=form)
 
