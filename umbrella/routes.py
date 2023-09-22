@@ -29,7 +29,7 @@ def register():
         else:
             user = models.User(form.username.data, hashed_password_str, form.email.data, form.bio.data)
 
-        models.insert_table('profile', user)
+        models.insert_table('profile', user, default_id_name='id')
         flash(form.username.data + ' account has been created.')
         return redirect(url_for('login'))
 
