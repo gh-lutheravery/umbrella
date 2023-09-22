@@ -10,6 +10,7 @@ app.config['SECRET_KEY'] = os.getenv('UMBRELLA_SECRET_KEY')
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+app.config['CKEDITOR_PKG_TYPE'] = 'basic'
 ckeditor = CKEditor(app)
 
 from umbrella import routes
