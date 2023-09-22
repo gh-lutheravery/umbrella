@@ -80,7 +80,7 @@ def create_post():
     form = PostForm()
     if form.validate_on_submit():
         post = models.Post(form.title.data, form.content.data, 0, current_user.id)
-        models.insert_table('profile', post)
+        models.insert_table('profile', post, default_id_name='id')
         flash('Post has been created.')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)

@@ -28,10 +28,17 @@ def read_rows(table_name, cond=None):
     return rows
 
 
-def insert_table(table_name, form_obj):
+def insert_table(table_name, form_obj, default_id_name=None):
     # Extract attribute names and values from the object
     attributes = get_obj_attrs(form_obj)
-    attribute_values = [getattr(form_obj, attr) for attr in attributes]
+
+    # if id in table autoincrements
+    if default_id_name:
+        attributes.append(default_id_name)
+        attribute_values = [getattr(form_obj, attr) for attr in attributes]
+        attribute_values.append("DEFAULT")
+    else:
+        attribute_values = [getattr(form_obj, attr) for attr in attributes]
 
     column_str = ', '.join(attributes)
     param_str = ('%s,' * len(attribute_values)).rstrip(',')
