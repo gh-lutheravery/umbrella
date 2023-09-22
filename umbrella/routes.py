@@ -95,3 +95,21 @@ def read_or_abort(table_name, filter):
     if len(post) == 0:
         abort(404, description="Post not found")
     return post
+
+@app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
+@login_required
+def update_post(post_id):
+    post = read_or_abort('post', ('id', post_id))
+    if post.author_id != current_user.id:
+        # user is forbidden
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        models.update_row(form, 'post', ('id', post_id))
+        flash('Post has been updated.')
+        return redirect(url_for('post', post_id=post_id))
+    elif request.method == 'GET':
+        form.title.data = post.title
+        form.content.data = post.content
+
+    return render_template('update_post.html', title='Update Post', form=form, legend='Update Post')
