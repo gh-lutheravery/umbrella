@@ -12,7 +12,7 @@ class DBModel():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query_users(User(), user_id)
+    return read_rows('profile', ('id', user_id))
 
 
 def read_rows(table_name, cond=None):
