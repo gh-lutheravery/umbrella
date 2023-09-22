@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request
 from umbrella import app, bcrypt
-from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm
+from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 import umbrella.models as models
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -74,3 +74,13 @@ def profile():
 
     return render_template('profile.html', title='Profile', form=form)
 
+@app.route("/create-post", methods=['GET', 'POST'])
+@login_required
+def create_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = models.Post(form.title.data, form.content.data, 0, current_user.id)
+        models.insert_table('profile', post)
+        flash('Post has been created.')
+        return redirect(url_for('home'))
+    return render_template('create_post.html', title='New Post', form=form)
