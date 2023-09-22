@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, abort
 from umbrella import app, bcrypt
 from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 import umbrella.models as models
@@ -84,3 +84,14 @@ def create_post():
         flash('Post has been created.')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = read_or_abort('post', ('id', post_id))
+    return render_template('post.html', title=post.title, post=post)
+
+def read_or_abort(table_name, filter):
+    post = models.read_rows('post', filter)
+    if len(post) == 0:
+        abort(404, description="Post not found")
+    return post
