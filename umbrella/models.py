@@ -127,9 +127,9 @@ class User(DBModel, UserMixin):
         if user_filter:
             row = read_rows('profile', user_filter)
 
-            id, username, email, _, bio, join_date = row[0]
+            id, username, email, password, bio, join_date, _ = row[0]
 
-            user = User(username, None, email, bio)
+            user = User(username, password, email, bio)
             user.set_date(join_date)
             user.set_id(id)
 
