@@ -52,6 +52,7 @@ def get_obj_attrs(obj):
 
     return attrs
 
+
 def update_row(form_obj, table_name, cond_filter, soft_delete_flag=None):
     if soft_delete_flag:
         update_query = f"""
@@ -107,7 +108,7 @@ class User(DBModel, UserMixin):
         self.password = password
         self.email = email
         self.bio = bio
-        self.join_date = datetime.datetime.now()
+        self.created_at = datetime.datetime.now()
 
     def __str__(self):
         return self.username.get_content() + ' User'
@@ -115,7 +116,7 @@ class User(DBModel, UserMixin):
     def set_date(self, date):
         if date != datetime.datetime:
             raise ValueError("date param not a datetime object.")
-        self.join_date = date
+        self.created_at = date
 
     def set_id(self, id):
         if id != int:
