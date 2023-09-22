@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect
 from umbrella import app, bcrypt
 from umbrella.forms import RegistrationForm, LoginForm
-from umbrella.models import User
+import umbrella.models as models
 from flask_login import login_user, logout_user, login_required, current_user
 
 
@@ -15,6 +15,7 @@ def home():
 def about():
     return "<h1>About Page</h1>"
 
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -24,15 +25,16 @@ def register():
         hashed_password_str = hashed_password.decode('utf-8')
 
         if not form.bio:
-            user = User(form.username.data, hashed_password_str, form.email.data)
+            user = models.User(form.username.data, hashed_password_str, form.email.data)
         else:
-            user = User(form.username.data, hashed_password_str, form.email.data, form.bio.data)
+            user = models.User(form.username.data, hashed_password_str, form.email.data, form.bio.data)
 
-        user.insert_user_table()
+        models.insert_table('profile', user)
         flash(form.username.data + ' account has been created.')
         return redirect(url_for('login'))
 
     return render_template('register.html', title='Register', form=form)
+
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -41,7 +43,7 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query_users(User(), ('email', form.email.data))
+        user = models.read_rows('profile', ('email', form.email.data))
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             flash('You are now logged in.')
@@ -57,7 +59,9 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+
 @app.route("/profile")
 @login_required
 def profile():
     return render_template('profile.html', title='Profile')
+
