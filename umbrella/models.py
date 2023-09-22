@@ -15,7 +15,7 @@ def load_user(user_id):
     return User.query_users(User(), user_id)
 
 
-def read_rows(self, table_name, cond=None):
+def read_rows(table_name, cond=None):
     if cond:
         query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False"
         params = [cond[1]]
@@ -28,16 +28,20 @@ def read_rows(self, table_name, cond=None):
     return rows
 
 
-def insert_table(table_name, column_list, value_list):
-    column_str = ', '.join(column_list)
-    param_str = ('%s,' * len(value_list)).rstrip(',')
+def insert_table(table_name, form_obj):
+    # Extract attribute names and values from the object
+    attributes = get_obj_attrs(form_obj)
+    attribute_values = [getattr(form_obj, attr) for attr in attributes]
+
+    column_str = ', '.join(attributes)
+    param_str = ('%s,' * len(attribute_values)).rstrip(',')
 
     insert_query = """
             INSERT INTO """ + table_name + """ (""" + column_str + """)
             VALUES (""" + param_str + """);
             """
 
-    db_interface.run_query(insert_query, value_list)
+    db_interface.run_query(insert_query, attribute_values)
 
 
 def get_obj_attrs(obj):
@@ -78,6 +82,10 @@ def update_row(form_obj, table_name, cond_filter, soft_delete_flag=None):
 
         params = [attribute_values + [getattr(form_obj, cond_filter[1])]]
         db_interface.run_query(update_query, params)
+
+
+def soft_delete(form_obj, table_name, cond_filter):
+    update_row(form_obj, table_name, cond_filter, soft_delete_flag=True)
 
 
 class User(DBModel, UserMixin):
@@ -152,44 +160,6 @@ class User(DBModel, UserMixin):
                 ");"
 
         db_interface.run_query(query)
-
-
-    def update_user_table(self, soft_delete_flag=False):
-        if soft_delete_flag:
-            update_query = f"""
-                        UPDATE profile
-                        SET is_deleted = %s
-                        WHERE id = %s;
-                        """
-
-            params = [
-                self.is_deleted,
-                self.id
-            ]
-
-            db_interface.run_query(update_query, params)
-
-        else:
-            update_query = f"""
-                        UPDATE profile
-                        SET username = %s, email = %s, password = %s, bio = %s, created_at = %s, is_deleted = %s
-                        WHERE id = %s;
-                        """
-
-            params = [
-                self.username,
-                self.email,
-                self.password,
-                self.bio,
-                self.join_date,
-                self.is_deleted,
-                self.id
-            ]
-
-            db_interface.run_query(update_query, params)
-
-    def soft_delete(self):
-        self.update_user_table(soft_delete_flag=True)
 
 
 class Post(DBModel, UserMixin):
