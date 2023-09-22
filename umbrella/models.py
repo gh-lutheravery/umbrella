@@ -40,6 +40,46 @@ def insert_table(table_name, column_list, value_list):
     db_interface.run_query(insert_query, value_list)
 
 
+def get_obj_attrs(obj):
+    attrs = []
+    for attr in dir(obj):
+        if not callable(getattr(obj, attr)) and not attr.startswith("__"):
+            attrs.append(attr)
+
+    return attrs
+
+def update_row(form_obj, table_name, cond_filter, soft_delete_flag=None):
+    if soft_delete_flag:
+        update_query = f"""
+            UPDATE {table_name}
+            SET is_deleted = %s
+            WHERE {cond_filter[0]} = %s;
+            """
+
+        params = [soft_delete_flag, cond_filter[1]]
+
+        db_interface.run_query(update_query, params)
+
+    else:
+        # Extract attribute names and values from the object
+        attributes = get_obj_attrs(form_obj)
+        attribute_values = [getattr(form_obj, attr) for attr in attributes]
+
+        # Build the SET clause for the UPDATE query
+        set_clauses = [f"{attr} = %s" for attr in attributes]
+        set_clause_str = ", ".join(set_clauses)
+
+        # Define the UPDATE query
+        update_query = f"""
+        UPDATE {table_name}
+        SET {set_clause_str}
+        WHERE {cond_filter[0]} = %s;
+        """
+
+        params = [attribute_values + [getattr(form_obj, cond_filter[1])]]
+        db_interface.run_query(update_query, params)
+
+
 class User(DBModel, UserMixin):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
