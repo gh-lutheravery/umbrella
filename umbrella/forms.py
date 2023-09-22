@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
+from flask_ckeditor import CKEditorField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 import umbrella.models as models
@@ -52,3 +53,8 @@ class UpdateProfileForm(FlaskForm):
 
             if user:
                 raise ValidationError('An account with that email exists; choose a different one.')
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(min=2, max=100)])
+    content = CKEditorField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post')
