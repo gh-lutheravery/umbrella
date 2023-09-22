@@ -92,8 +92,8 @@ def update_row(form_obj, table_name, cond_filter, soft_delete_flag=None):
         db_interface.run_query(update_query, params)
 
 
-def soft_delete(form_obj, table_name, cond_filter):
-    update_row(form_obj, table_name, cond_filter, soft_delete_flag=True)
+def soft_delete(table_name, cond_filter):
+    update_row(None, table_name, cond_filter, soft_delete_flag=True)
 
 
 class User(DBModel, UserMixin):

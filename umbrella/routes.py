@@ -113,3 +113,14 @@ def update_post(post_id):
         form.content.data = post.content
 
     return render_template('update_post.html', title='Update Post', form=form, legend='Update Post')
+
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = read_or_abort('post', ('id', post_id))
+    if post.author_id != current_user.id:
+        # user is forbidden
+        abort(403)
+    models.soft_delete('post', ('id', post_id))
+    flash('Post has been deleted.')
+    return redirect(url_for('home'))
