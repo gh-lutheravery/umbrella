@@ -52,34 +52,36 @@ class User(DBModel, UserMixin):
     def __str__(self):
         return self.username.get_content() + ' User'
 
+    def set_date(self, date):
+        if date != datetime.datetime:
+            raise ValueError("date param not a datetime object.")
+        self.join_date = date
+
+    def set_id(self, id):
+        if id != int:
+            raise ValueError("date param not a datetime object.")
+        self.id = id
 
     def query_users(self, user_filter=None):
         if user_filter:
             row = read_rows('profile', user_filter)
 
-            user = User()
-
             id, username, email, _, bio, join_date = row[0]
 
-            user.id = id
-            user.username = username
-            user.email = email
-            user.bio = bio
-            user.join_date = join_date
+            user = User(username, None, email, bio)
+            user.set_date(join_date)
+            user.set_id(id)
 
             return user
 
         rows = read_rows('profile')
         users = []
         for r in rows:
-            user = User()
             id, username, email, _, bio, join_date = r
 
-            user.id = id
-            user.username = username
-            user.email = email
-            user.bio = bio
-            user.join_date = join_date
+            user = User(username, None, email, bio)
+            user.set_date(join_date)
+            user.set_id(id)
 
             users.append(user)
 
