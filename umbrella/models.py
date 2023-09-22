@@ -28,6 +28,18 @@ def read_rows(self, table_name, cond=None):
     return rows
 
 
+def insert_table(table_name, column_list, value_list):
+    column_str = ', '.join(column_list)
+    param_str = ('%s,' * len(value_list)).rstrip(',')
+
+    insert_query = """
+            INSERT INTO """ + table_name + """ (""" + column_str + """)
+            VALUES (""" + param_str + """);
+            """
+
+    db_interface.run_query(insert_query, value_list)
+
+
 class User(DBModel, UserMixin):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
@@ -100,24 +112,6 @@ class User(DBModel, UserMixin):
                 ");"
 
         db_interface.run_query(query)
-
-
-    def insert_user_table(self):
-        insert_query = """
-                INSERT INTO profile (id, username, email, password, bio, created_at, is_deleted)
-                VALUES (DEFAULT, %s, %s, %s, %s, %s, %s);
-                """
-
-        params = [
-            self.username,
-            self.email,
-            self.password,
-            self.bio,
-            self.join_date,
-            self.is_deleted
-        ]
-
-        db_interface.run_query(insert_query, params)
 
 
     def update_user_table(self, soft_delete_flag=False):
