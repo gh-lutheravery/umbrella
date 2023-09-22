@@ -187,6 +187,41 @@ class Post(DBModel, UserMixin):
     def __str__(self):
         return self.title
 
+    def set_date(self, date):
+        if date != datetime.datetime:
+            raise ValueError("date param not a datetime object.")
+        self.created_at = date
+
+    def set_id(self, id):
+        if id != int:
+            raise ValueError("date param not a datetime object.")
+        self.id = id
+
+    def query_posts(self, post_filter=None):
+        if post_filter:
+            row = read_rows('profile', post_filter)
+
+            id, title, content, created_at, view_count, author_id, _ = row[0]
+
+            user = Post(title, content, view_count, author_id)
+            user.set_date(created_at)
+            user.set_id(id)
+
+            return user
+
+        rows = read_rows('profile')
+        users = []
+        for r in rows:
+            id, username, email, _, bio, join_date = r
+
+            user = User(username, None, email, bio)
+            user.set_date(join_date)
+            user.set_id(id)
+
+            users.append(user)
+
+        return users
+
     def read_user_rows(self, cond=None):
         if cond:
             query = "SELECT * FROM profile WHERE {} = %s AND is_deleted = False"
