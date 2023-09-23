@@ -257,10 +257,11 @@ class Comment(DBModel):
 
     table_name = "comment"
 
-    def __init__(self, content=None, author_id=None):
+    def __init__(self, content=None, author_id=None, post_id=None):
         self.id = 0
         self.content = content
         self.created_at = datetime.datetime.now()
+        self.post_id = post_id
         self.author_id = author_id
 
     def __str__(self):
@@ -280,9 +281,9 @@ class Comment(DBModel):
         if comment_filter:
             row = read_rows(self.table_name, comment_filter)
 
-            id, content, created_at, author_id, _ = row[0]
+            id, content, created_at, author_id, post_id, _ = row[0]
 
-            com = Comment(content, author_id)
+            com = Comment(content, author_id, post_id)
             com.set_date(created_at)
             com.set_id(id)
 
@@ -291,9 +292,9 @@ class Comment(DBModel):
         rows = read_rows(self.table_name)
         coms = []
         for r in rows:
-            id, content, created_at, author_id, _ = r
+            id, content, created_at, author_id, post_id, _ = r
 
-            com = Comment(content, author_id)
+            com = Comment(content, author_id, post_id)
             com.set_date(created_at)
             com.set_id(id)
 
