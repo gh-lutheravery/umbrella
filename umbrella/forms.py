@@ -15,15 +15,15 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign up')
 
     def validate_username(self, username):
-        user = models.read_rows('profile', ('username', username))
+        rows = models.read_rows('profile', ('username', username))
 
-        if user:
+        if len(rows) != 0:
             raise ValidationError('An account with that username exists; choose a different one.')
 
     def validate_email(self, email):
-        user = models.read_rows('profile', ('email', email))
+        rows = models.read_rows('profile', ('email', email))
 
-        if user:
+        if len(rows) != 0:
             raise ValidationError('An account with that email exists; choose a different one.')
 
 
@@ -42,16 +42,16 @@ class UpdateProfileForm(FlaskForm):
 
     def validate_username(self, username):
         if username.data != current_user.username:
-            user = models.read_rows('profile', ('username', username))
+            rows = models.read_rows('profile', ('username', username))
 
-            if user:
+            if len(rows) != 0:
                 raise ValidationError('An account with that username exists; choose a different one.')
 
     def validate_email(self, email):
         if email.data != current_user.email:
-            user = models.read_rows('profile', ('email', email))
+            rows = models.read_rows('profile', ('email', email))
 
-            if user:
+            if len(rows) != 0:
                 raise ValidationError('An account with that email exists; choose a different one.')
 
 class PostForm(FlaskForm):
