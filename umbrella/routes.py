@@ -104,10 +104,10 @@ def post(post_id):
     return render_template('post.html', title=post_comment.post.title, post=post_comment)
 
 def read_or_abort(table_name, filter):
-    post = models.read_rows('post', filter)
+    posts = models.Post().query_posts(filter)
     if len(post) == 0:
         abort(404, description="Post not found")
-    return post
+    return posts
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required

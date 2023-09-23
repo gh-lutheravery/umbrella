@@ -204,7 +204,7 @@ class Post(DBModel):
             raise ValueError("date param not a datetime object.")
         self.id = id
 
-    def populate_post(self, row):
+    def _populate_post(self, row):
         id, title, content, created_at, view_count, author_id, _ = row
 
         post = Post(title, content, view_count, author_id)
@@ -213,13 +213,13 @@ class Post(DBModel):
 
         return post
 
-    def get_posts(self, post_filter=None):
+    def _get_posts(self, post_filter=None):
         if post_filter:
             rows = read_rows(self.table_name, post_filter)
             posts = []
 
             for r in rows:
-                post = self.populate_post(r)
+                post = self._populate_post(r)
                 posts.append(post)
 
             return posts
@@ -228,16 +228,16 @@ class Post(DBModel):
         posts = []
 
         for r in rows:
-            post = self.populate_post(r)
+            post = self._populate_post(r)
             posts.append(post)
 
         return posts
 
     def query_posts(self, post_filter=None):
         if post_filter:
-            self.get_posts(post_filter)
+            self._get_posts(post_filter)
 
-        posts = self.get_posts()
+        posts = self._get_posts()
         return posts
 
     def create_post_table(self):
