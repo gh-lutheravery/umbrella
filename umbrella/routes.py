@@ -138,3 +138,12 @@ def delete_post(post_id):
     flash('Post has been deleted.')
     return redirect(url_for('home'))
 
+
+@app.route("/search-results")
+def search():
+    search_query = request.args.get('query', default=None)
+    if not(search_query):
+        abort(400)
+
+    posts = read_or_abort('post', ('title', search_query))
+    return render_template('search.html', title=search_query + ' Search Results', posts=posts)
