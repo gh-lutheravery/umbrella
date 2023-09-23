@@ -170,7 +170,7 @@ class User(DBModel, UserMixin):
         db_interface.run_query(query)
 
 
-class Post(DBModel, UserMixin):
+class Post(DBModel):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
         ("title", "varchar(255)", "UNIQUE NOT NULL"),
@@ -237,6 +237,75 @@ class Post(DBModel, UserMixin):
             content text NOT NULL,
             created_at timestamp DEFAULT current_timestamp NOT NULL,
             view_count bigint NOT NULL,
+            author_id varchar(255) UNIQUE NOT NULL,
+            is_deleted boolean
+        );
+        """
+
+        db_interface.run_query(query)
+
+
+class Comment(DBModel):
+    db_columns = [
+        ("id", "serial", "PRIMARY KEY"),
+        ("content", "text", "NOT NULL"),
+        ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
+        ("author_id", "varchar(255)", "UNIQUE NOT NULL"),
+        ("is_deleted", "boolean"),
+    ]
+
+    table_name = "comment"
+
+    def __init__(self, content=None, author_id=None):
+        self.id = 0
+        self.content = content
+        self.created_at = datetime.datetime.now()
+        self.author_id = author_id
+
+    def __str__(self):
+        return self.id
+
+    def set_date(self, date):
+        if date != datetime.datetime:
+            raise ValueError("date param not a datetime object.")
+        self.created_at = date
+
+    def set_id(self, id):
+        if id != int:
+            raise ValueError("date param not a datetime object.")
+        self.id = id
+
+    def query_comments(self, comment_filter=None):
+        if comment_filter:
+            row = read_rows(self.table_name, comment_filter)
+
+            id, content, created_at, author_id, _ = row[0]
+
+            com = Comment(content, author_id)
+            com.set_date(created_at)
+            com.set_id(id)
+
+            return com
+
+        rows = read_rows(self.table_name)
+        coms = []
+        for r in rows:
+            id, content, created_at, author_id, _ = r
+
+            com = Comment(content, author_id)
+            com.set_date(created_at)
+            com.set_id(id)
+
+            coms.append(com)
+
+        return coms
+
+    def create_post_table(self):
+        query = """
+        CREATE TABLE IF NOT EXISTS comment (
+            id serial PRIMARY KEY,
+            content text NOT NULL,
+            created_at timestamp DEFAULT current_timestamp NOT NULL,
             author_id varchar(255) UNIQUE NOT NULL,
             is_deleted boolean
         );
