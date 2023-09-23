@@ -315,3 +315,15 @@ class Comment(DBModel):
         """
 
         db_interface.run_query(query)
+
+
+class PostComment():
+    def __init__(self, title, content, author_id, post_id, created_at):
+        self.comments = self._query_post_comments()
+
+        self.post = Post(title, content, author_id)
+        self.post.set_id(post_id)
+        self.post.set_date(created_at)
+
+    def _query_post_comments(self):
+        return Comment().query_comments(('post_id', self.post.id))
