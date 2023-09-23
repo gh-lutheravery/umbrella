@@ -8,6 +8,12 @@ import datetime
 class DBModel():
     table_name = ""
     is_deleted = False
+    id = 0
+
+    def set_id(self, new_id):
+        if new_id != int:
+            raise ValueError("id param not an int.")
+        self.id = new_id
 
 
 @login_manager.user_loader
@@ -133,7 +139,6 @@ class User(DBModel, UserMixin):
     table_name = "user"
 
     def __init__(self, username=None, password=None, email=None, bio=None):
-        self.id = 0
         self.username = username
         self.password = password
         self.email = email
@@ -147,11 +152,6 @@ class User(DBModel, UserMixin):
         if date != datetime.datetime:
             raise ValueError("date param not a datetime object.")
         self.created_at = date
-
-    def set_id(self, id):
-        if id != int:
-            raise ValueError("date param not a datetime object.")
-        self.id = id
 
     def query_users(self, user_filter=None):
         if user_filter:
@@ -193,7 +193,6 @@ class Post(DBModel):
     table_name = "post"
 
     def __init__(self, title=None, content=None, view_count=None, author_id=None):
-        self.id = 0
         self.title = title
         self.content = content
         self.view_count = view_count
@@ -207,11 +206,6 @@ class Post(DBModel):
         if date != datetime.datetime:
             raise ValueError("date param not a datetime object.")
         self.created_at = date
-
-    def set_id(self, id):
-        if id != int:
-            raise ValueError("date param not a datetime object.")
-        self.id = id
 
     def _populate_post(self, row):
         id, title, content, created_at, view_count, author_id, _ = row
@@ -263,7 +257,6 @@ class Comment(DBModel):
     table_name = "comment"
 
     def __init__(self, content=None, author_id=None, post_id=None):
-        self.id = 0
         self.content = content
         self.created_at = datetime.datetime.now()
         self.post_id = post_id
@@ -276,11 +269,6 @@ class Comment(DBModel):
         if date != datetime.datetime:
             raise ValueError("date param not a datetime object.")
         self.created_at = date
-
-    def set_id(self, id):
-        if id != int:
-            raise ValueError("date param not a datetime object.")
-        self.id = id
 
     def query_comments(self, comment_filter=None):
         if comment_filter:
@@ -339,11 +327,6 @@ class Category(DBModel):
 
     def __str__(self):
         return self.title
-
-    def set_id(self, id):
-        if id != int:
-            raise ValueError("date param not a datetime object.")
-        self.id = id
 
     def query_categories(self):
         rows = read_rows(self.table_name)
