@@ -186,7 +186,7 @@ class Post(DBModel):
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
         ("view_count", "bigint", "NOT NULL"),
-        ("author_id", "varchar(255)", "NOT NULL"),
+        ("author_id", "int", "NOT NULL"),
         ("category_id", "int", "NOT NULL"),
         ("is_deleted", "boolean"),
     ]
@@ -251,8 +251,8 @@ class Comment(DBModel):
         ("id", "serial", "PRIMARY KEY"),
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
-        ("author_id", "varchar(255)", "NOT NULL"),
-        ("post_id", "varchar(255)", "NOT NULL"),
+        ("author_id", "int", "NOT NULL"),
+        ("post_id", "int", "NOT NULL"),
         ("is_deleted", "boolean"),
     ]
 
