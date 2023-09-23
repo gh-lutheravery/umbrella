@@ -302,13 +302,14 @@ class Comment(DBModel):
 
         return coms
 
-    def create_post_table(self):
+    def create_comment_table(self):
         query = """
         CREATE TABLE IF NOT EXISTS comment (
             id serial PRIMARY KEY,
             content text NOT NULL,
             created_at timestamp DEFAULT current_timestamp NOT NULL,
-            author_id varchar(255) UNIQUE NOT NULL,
+            author_id varchar(255) NOT NULL,
+            post_id varchar(255) NOT NULL,
             is_deleted boolean
         );
         """
