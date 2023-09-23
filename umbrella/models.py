@@ -210,24 +210,24 @@ class Post(DBModel):
 
             id, title, content, created_at, view_count, author_id, _ = row[0]
 
-            user = Post(title, content, view_count, author_id)
-            user.set_date(created_at)
-            user.set_id(id)
+            post = Post(title, content, view_count, author_id)
+            post.set_date(created_at)
+            post.set_id(id)
 
-            return user
+            return post
 
         rows = read_rows(self.table_name)
-        users = []
+        posts = []
         for r in rows:
             id, title, content, created_at, view_count, author_id, _ = r
 
-            user = Post(title, content, view_count, author_id)
-            user.set_date(created_at)
-            user.set_id(id)
+            post = Post(title, content, view_count, author_id)
+            post.set_date(created_at)
+            post.set_id(id)
 
-            users.append(user)
+            posts.append(post)
 
-        return users
+        return posts
 
     def create_post_table(self):
         query = """
