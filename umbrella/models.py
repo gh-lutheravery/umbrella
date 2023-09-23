@@ -187,16 +187,18 @@ class Post(DBModel):
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
         ("view_count", "bigint", "NOT NULL"),
         ("author_id", "varchar(255)", "NOT NULL"),
+        ("category_id", "int", "NOT NULL"),
         ("is_deleted", "boolean"),
     ]
 
     table_name = "post"
 
-    def __init__(self, title=None, content=None, view_count=None, author_id=None):
+    def __init__(self, title=None, content=None, view_count=None, author_id=None, category_id=None):
         self.title = title
         self.content = content
         self.view_count = view_count
         self.author_id = author_id
+        self.category_id = category_id
         self.created_at = datetime.datetime.now()
 
     def __str__(self):
@@ -208,9 +210,9 @@ class Post(DBModel):
         self.created_at = date
 
     def _populate_post(self, row):
-        id, title, content, created_at, view_count, author_id, _ = row
+        id, title, content, created_at, view_count, author_id, category_id, _ = row
 
-        post = Post(title, content, view_count, author_id)
+        post = Post(title, content, view_count, author_id, category_id)
         post.set_date(created_at)
         post.set_id(id)
 
