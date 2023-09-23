@@ -179,20 +179,6 @@ class User(DBModel, UserMixin):
         return users
 
 
-    def create_user_table(self):
-        query = "CREATE TABLE IF NOT EXISTS user (" \
-                "id, serial, PRIMARY KEY" \
-                "username, varchar(255), NOT NULL" \
-                "email, varchar(255), UNIQUE NOT NULL" \
-                "password, varchar(255), UNIQUE NOT NULL" \
-                "bio, varchar(511)" \
-                "created_at, timestamp, DEFAULT current_timestamp NOT NULL" \
-                "is_deleted, boolean" \
-                ");"
-
-        db_interface.run_query(query)
-
-
 class Post(DBModel):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
@@ -263,21 +249,6 @@ class Post(DBModel):
         posts = self._get_posts()
         return posts
 
-    def create_post_table(self):
-        query = """
-        CREATE TABLE IF NOT EXISTS post (
-            id serial PRIMARY KEY,
-            title varchar(255) NOT NULL,
-            content text NOT NULL,
-            created_at timestamp DEFAULT current_timestamp NOT NULL,
-            view_count bigint NOT NULL,
-            author_id varchar(255) NOT NULL,
-            is_deleted boolean
-        );
-        """
-
-        db_interface.run_query(query)
-
 
 class Comment(DBModel):
     db_columns = [
@@ -336,20 +307,6 @@ class Comment(DBModel):
 
         return coms
 
-    def create_comment_table(self):
-        query = """
-        CREATE TABLE IF NOT EXISTS comment (
-            id serial PRIMARY KEY,
-            content text NOT NULL,
-            created_at timestamp DEFAULT current_timestamp NOT NULL,
-            author_id varchar(255) NOT NULL,
-            post_id varchar(255) NOT NULL,
-            is_deleted boolean
-        );
-        """
-
-        db_interface.run_query(query)
-
 
 class PostComment():
     def __init__(self, title, content, author_id, post_id, created_at):
@@ -400,16 +357,3 @@ class Category(DBModel):
             cats.append(cat)
 
         return cats
-
-    def create_category_table(self):
-        query = """
-        CREATE TABLE IF NOT EXISTS post (
-            id serial PRIMARY KEY,
-            title varchar(255) UNIQUE NOT NULL,
-            desc varchar(255),
-            post_count bigint NOT NULL,
-            is_deleted boolean
-        );
-        """
-
-        db_interface.run_query(query)
