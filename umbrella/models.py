@@ -338,3 +338,55 @@ class PostComment():
 
     def _query_post_comments(self):
         return Comment().query_comments(('post_id', self.post.id))
+
+
+class Category(DBModel):
+    db_columns = [
+        ("id", "serial", "PRIMARY KEY"),
+        ("title", "varchar(255)", "UNIQUE NOT NULL"),
+        ("desc", "varchar(255)"),
+        ("post_count", "bigint", "NOT NULL"),
+        ("is_deleted", "boolean"),
+    ]
+
+    table_name = "category"
+
+    def __init__(self, title=None, desc=None, post_count=None):
+        self.id = 0
+        self.title = title
+        self.desc = desc
+        self.post_count = post_count
+
+    def __str__(self):
+        return self.title
+
+    def set_id(self, id):
+        if id != int:
+            raise ValueError("date param not a datetime object.")
+        self.id = id
+
+    def query_categories(self):
+        rows = read_rows(self.table_name)
+        cats = []
+        for r in rows:
+            id, title, content, desc, post_count, _ = r
+
+            cat = Category(title, desc, post_count)
+            cat.set_id(id)
+
+            cats.append(cat)
+
+        return cats
+
+    def create_category_table(self):
+        query = """
+        CREATE TABLE IF NOT EXISTS post (
+            id serial PRIMARY KEY,
+            title varchar(255) UNIQUE NOT NULL,
+            desc varchar(255),
+            post_count bigint NOT NULL,
+            is_deleted boolean
+        );
+        """
+
+        db_interface.run_query(query)
