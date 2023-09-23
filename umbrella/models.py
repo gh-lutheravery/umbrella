@@ -177,7 +177,7 @@ class Post(DBModel):
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
         ("view_count", "bigint", "NOT NULL"),
-        ("author_id", "varchar(255)", "UNIQUE NOT NULL"),
+        ("author_id", "varchar(255)", "NOT NULL"),
         ("is_deleted", "boolean"),
     ]
 
@@ -233,11 +233,11 @@ class Post(DBModel):
         query = """
         CREATE TABLE IF NOT EXISTS post (
             id serial PRIMARY KEY,
-            title varchar(255) UNIQUE NOT NULL,
+            title varchar(255) NOT NULL,
             content text NOT NULL,
             created_at timestamp DEFAULT current_timestamp NOT NULL,
             view_count bigint NOT NULL,
-            author_id varchar(255) UNIQUE NOT NULL,
+            author_id varchar(255) NOT NULL,
             is_deleted boolean
         );
         """
@@ -251,6 +251,7 @@ class Comment(DBModel):
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
         ("author_id", "varchar(255)", "UNIQUE NOT NULL"),
+        ("post_id", "varchar(255)", "UNIQUE NOT NULL"),
         ("is_deleted", "boolean"),
     ]
 
