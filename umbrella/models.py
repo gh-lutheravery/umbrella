@@ -28,6 +28,29 @@ def read_rows(table_name, cond=None):
     return rows
 
 
+def create_table(table_name, columns):
+    if not columns:
+        raise ValueError("Columns list is empty.")
+
+    query = f"CREATE TABLE IF NOT EXISTS {table_name} (\n"
+
+    # Iterate through the columns and add them to the query
+    for column in columns:
+        column_name, data_type, *modifiers = column
+
+        if modifiers:
+            modifiers_str = " ".join(modifiers)
+            query += f"    {column_name} {data_type} {modifiers_str},\n"
+        else:
+            query += f"    {column_name} {data_type},\n"
+
+    query = query.rstrip(",\n")
+
+    query += "\n);"
+
+    return query
+
+
 def insert_table(table_name, form_obj, default_id_name=None):
     # Extract attribute names and values from the object
     attributes = get_obj_attrs(form_obj)
