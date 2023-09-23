@@ -48,7 +48,7 @@ def create_table(table_name, columns):
 
     query += "\n);"
 
-    return query
+    db_interface.run_query(query)
 
 
 def insert_table(table_name, form_obj, default_id_name=None):
