@@ -1,6 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort
 from umbrella import app, bcrypt
-from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
+from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm, CommentForm
 import umbrella.models as models
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -85,9 +85,14 @@ def create_post():
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
 
-@app.route("/post/<int:post_id>")
+@app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     post = read_or_abort('post', ('id', post_id))
+    form = CommentForm()
+    if form.validate_on_submit():
+        models.insert_table('comment', form, 'id')
+        flash('Comment has been posted.')
+        return redirect(url_for('post', post_id=post_id))
     return render_template('post.html', title=post.title, post=post)
 
 def read_or_abort(table_name, filter):
@@ -124,3 +129,4 @@ def delete_post(post_id):
     models.soft_delete('post', ('id', post_id))
     flash('Post has been deleted.')
     return redirect(url_for('home'))
+
