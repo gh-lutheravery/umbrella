@@ -250,8 +250,8 @@ class Comment(DBModel):
         ("id", "serial", "PRIMARY KEY"),
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
-        ("author_id", "varchar(255)", "UNIQUE NOT NULL"),
-        ("post_id", "varchar(255)", "UNIQUE NOT NULL"),
+        ("author_id", "varchar(255)", "NOT NULL"),
+        ("post_id", "varchar(255)", "NOT NULL"),
         ("is_deleted", "boolean"),
     ]
 
