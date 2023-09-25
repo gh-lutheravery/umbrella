@@ -9,6 +9,12 @@ from flask_login import login_user, logout_user, login_required, current_user
 @app.route("/")
 @app.route("/home")
 def home():
+    category_title = request.args.get('category', default=None)
+    if category_title:
+        cat_obj = models.Category().query_categories(ind_cat_filter=('title', category_title))
+        posts = models.Post.query_posts(models.Post(), limit=20, post_filter=('category_id', cat_obj.id))
+        return render_template('home.html', posts=posts)
+
     posts = models.Post.query_posts(models.Post(), limit=20)
     return render_template('home.html', posts=posts)
 
@@ -149,14 +155,12 @@ def search():
 
     posts = read_or_abort('post', ('title', search_query))
 
-    page = request.args.get('page', default=0, type=int)
-
     last_page = models.Pagination.get_last_page(len(posts), 15)
+    page = request.args.get('page', default=0, type=int)
     if page > last_page:
         abort(404)
 
     paginated_posts = models.get_paginated_items(posts, per_page=15, page=page)
-
     return render_template('search.html',
                            title=search_query + ' Search Results',
                            posts=paginated_posts)
