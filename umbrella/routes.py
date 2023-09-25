@@ -30,7 +30,7 @@ def register():
         else:
             user = models.User(form.username.data, hashed_password_str, form.email.data, form.bio.data)
 
-        models.insert_table('profile', user, default_id_name='id')
+        db_interface.insert_table('profile', user, default_id_name='id')
         flash(form.username.data + ' account has been created.')
         return redirect(url_for('login'))
 
@@ -44,7 +44,7 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = models.read_rows('profile', ('email', form.email.data))
+        user = db_interface.read_rows('profile', ('email', form.email.data))
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             flash('You are now logged in.')
@@ -66,7 +66,7 @@ def logout():
 def profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
-        models.update_row(form, 'profile', ('id', current_user.id))
+        db_interface.update_row(form, 'profile', ('id', current_user.id))
         flash('Profile has been updated.')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
@@ -81,7 +81,7 @@ def create_post():
     form = PostForm()
     if form.validate_on_submit():
         post = models.Post(form.title.data, form.content.data, 0, current_user.id)
-        models.insert_table('profile', post, default_id_name='id')
+        db_interface.insert_table('profile', post, default_id_name='id')
         flash('Post has been created.')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
@@ -90,7 +90,7 @@ def create_post():
 def post(post_id):
     form = CommentForm()
     if form.validate_on_submit():
-        models.insert_table('comment', form, 'id')
+        db_interface.insert_table('comment', form, 'id')
         flash('Comment has been posted.')
         return redirect(url_for('post', post_id=post_id))
 
@@ -106,7 +106,7 @@ def post(post_id):
 
 def read_or_abort(table_name, filter):
     posts = models.Post().query_posts(filter)
-    if len(post) == 0:
+    if len(posts) == 0:
         abort(404, description="Post not found")
     return posts
 
@@ -119,7 +119,7 @@ def update_post(post_id):
         abort(403)
     form = PostForm()
     if form.validate_on_submit():
-        models.update_row(form, 'post', ('id', post_id))
+        db_interface.update_row(form, 'post', ('id', post_id))
         flash('Post has been updated.')
         return redirect(url_for('post', post_id=post_id))
     elif request.method == 'GET':
@@ -135,7 +135,7 @@ def delete_post(post_id):
     if post.author_id != current_user.id:
         # user is forbidden
         abort(403)
-    models.soft_delete('post', ('id', post_id))
+    db_interface.soft_delete('post', ('id', post_id))
     flash('Post has been deleted.')
     return redirect(url_for('home'))
 

@@ -20,7 +20,7 @@ class DBModel():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return read_rows('profile', cond=('id', user_id))
+    return db_interface.read_rows('profile', cond=('id', user_id))
 
 
 class User(DBModel, UserMixin):
@@ -53,7 +53,7 @@ class User(DBModel, UserMixin):
 
     def query_users(self, user_filter=None):
         if user_filter:
-            row = read_rows('profile', cond=user_filter)
+            row = db_interface.read_rows('profile', cond=user_filter)
 
             id, username, email, password, bio, join_date, _ = row[0]
 
@@ -63,7 +63,7 @@ class User(DBModel, UserMixin):
 
             return user
 
-        rows = read_rows('profile')
+        rows = db_interface.read_rows('profile')
         users = []
         for r in rows:
             id, username, email, _, bio, join_date = r
@@ -118,7 +118,7 @@ class Post(DBModel):
 
     def _get_posts(self, limit, post_filter=None):
         if post_filter:
-            rows = read_rows(self.table_name, cond=post_filter, limit=limit)
+            rows = db_interface.read_rows(self.table_name, cond=post_filter, limit=limit)
             posts = []
 
             for r in rows:
@@ -127,7 +127,7 @@ class Post(DBModel):
 
             return posts
 
-        rows = read_rows(self.table_name, limit=limit)
+        rows = db_interface.read_rows(self.table_name, limit=limit)
         posts = []
 
         for r in rows:
@@ -207,7 +207,7 @@ class Comment(DBModel):
 
     def query_comments(self, comment_filter=None):
         if comment_filter:
-            row = read_rows(self.table_name, cond=comment_filter)
+            row = db_interface.read_rows(self.table_name, cond=comment_filter)
 
             id, content, created_at, author_id, post_id, _ = row[0]
 
@@ -217,7 +217,7 @@ class Comment(DBModel):
 
             return com
 
-        rows = read_rows(self.table_name)
+        rows = db_interface.read_rows(self.table_name)
         coms = []
         for r in rows:
             id, content, created_at, author_id, post_id, _ = r
@@ -264,7 +264,7 @@ class Category(DBModel):
         return self.title
 
     def query_categories(self):
-        rows = read_rows(self.table_name)
+        rows = db_interface.read_rows(self.table_name)
         cats = []
         for r in rows:
             id, title, content, desc, post_count, _ = r
