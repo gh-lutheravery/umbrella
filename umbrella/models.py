@@ -5,7 +5,6 @@ from flask_login import UserMixin
 import datetime
 
 
-
 class DBModel():
     table_name = ""
     is_deleted = False
@@ -83,8 +82,8 @@ class Post(DBModel):
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
         ("view_count", "bigint", "NOT NULL"),
-        ("author_id", "int", "NOT NULL"),
-        ("category_id", "int", "NOT NULL"),
+        ("author_id", "int", "REFERENCES profile(id)"),
+        ("category_id", "int", "REFERENCES category(id)"),
         ("is_deleted", "boolean"),
     ]
 
@@ -186,8 +185,8 @@ class Comment(DBModel):
         ("id", "serial", "PRIMARY KEY"),
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
-        ("author_id", "int", "NOT NULL"),
-        ("post_id", "int", "NOT NULL"),
+        ("author_id", "int", "REFERENCES profile(id)"),
+        ("post_id", "int", "REFERENCES post(id)"),
         ("is_deleted", "boolean"),
     ]
 
