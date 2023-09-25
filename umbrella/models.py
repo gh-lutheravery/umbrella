@@ -20,7 +20,7 @@ class DBModel():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return read_rows('profile', ('id', user_id))
+    return read_rows('profile', cond=('id', user_id))
 
 
 def read_rows(table_name, limit=10, cond=None):
@@ -157,7 +157,7 @@ class User(DBModel, UserMixin):
 
     def query_users(self, user_filter=None):
         if user_filter:
-            row = read_rows('profile', user_filter)
+            row = read_rows('profile', cond=user_filter)
 
             id, username, email, password, bio, join_date, _ = row[0]
 
@@ -222,7 +222,7 @@ class Post(DBModel):
 
     def _get_posts(self, limit, post_filter=None):
         if post_filter:
-            rows = read_rows(self.table_name, post_filter, limit=limit)
+            rows = read_rows(self.table_name, cond=post_filter, limit=limit)
             posts = []
 
             for r in rows:
@@ -311,7 +311,7 @@ class Comment(DBModel):
 
     def query_comments(self, comment_filter=None):
         if comment_filter:
-            row = read_rows(self.table_name, comment_filter)
+            row = read_rows(self.table_name, cond=comment_filter)
 
             id, content, created_at, author_id, post_id, _ = row[0]
 
