@@ -153,19 +153,20 @@ class Pagination():
 
         self.page = page
 
-def get_last_page(items_len, per_page):
-    div_result = items_len / per_page
-    if div_result > 1:
-        return math.ceil(div_result)
-    else:
-        return math.floor(div_result)
+    @staticmethod
+    def get_last_page(items_len, per_page):
+        div_result = items_len / per_page
+        if div_result > 1:
+            return math.ceil(div_result)
+        else:
+            return math.floor(div_result)
 
 
 def get_paginated_items(items: list, per_page=10, page=0):
     new_items = []
     tally = 0
 
-    if page > get_last_page(len(items), per_page):
+    if page > Pagination.get_last_page(len(items), per_page):
         raise ValueError("Given page argument is larger than the last possible page.")
 
     if page > 0:
@@ -178,7 +179,6 @@ def get_paginated_items(items: list, per_page=10, page=0):
             tally += 1
 
     return Pagination(new_items, per_page, page)
-
 
 
 class Comment(DBModel):
