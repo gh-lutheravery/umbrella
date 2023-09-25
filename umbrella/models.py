@@ -1,3 +1,5 @@
+import math
+
 import umbrella.db_interface as db_interface
 from umbrella import login_manager
 from flask_login import UserMixin
@@ -244,6 +246,41 @@ class Post(DBModel):
 
         posts = self._get_posts()
         return posts
+
+
+class Pagination():
+    def __init__(self, items: list, per_page=10, page=0):
+        self.items = items
+
+        if per_page == 0:
+            raise ValueError("per_page cannot be zero.")
+        self.per_page = per_page
+
+        self.page = page
+
+    def get_last_page(self):
+        div_result = len(self.items) / self.per_page
+        if div_result > 1:
+            return math.ceil(div_result)
+        else:
+            return math.floor(div_result)
+
+
+def get_paginated_items(items: list, per_page=10, page=0):
+    new_items = []
+    tally = 0
+
+    if page > 0:
+        starting_pos = page * per_page
+
+        for i in items[starting_pos:]:
+            if tally > per_page:
+                break
+            new_items.append(i)
+            tally += 1
+
+    return Pagination(new_items, per_page, page)
+
 
 
 class Comment(DBModel):
