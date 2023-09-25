@@ -150,6 +150,11 @@ def search():
     posts = read_or_abort('post', ('title', search_query))
 
     page = request.args.get('page', default=0, type=int)
+
+    last_page = models.Pagination.get_last_page(len(posts), 15)
+    if page > last_page:
+        abort(404)
+
     paginated_posts = models.get_paginated_items(posts, per_page=15, page=page)
 
     return render_template('search.html',
