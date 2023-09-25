@@ -23,9 +23,9 @@ def load_user(user_id):
     return read_rows('profile', cond=('id', user_id))
 
 
-def read_rows(table_name, limit=10, cond=None):
+def read_rows(table_name, limit=100, cond=None):
     if cond:
-        query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False LIMIT " + limit
+        query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False"
         params = [cond[1]]
         field_param = cond[0]
         rows = db_interface.run_query(query, params, field_param)
