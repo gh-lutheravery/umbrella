@@ -23,15 +23,15 @@ def load_user(user_id):
     return read_rows('profile', ('id', user_id))
 
 
-def read_rows(table_name, cond=None):
+def read_rows(table_name, limit=10, cond=None):
     if cond:
-        query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False"
+        query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False LIMIT " + limit
         params = [cond[1]]
         field_param = cond[0]
         rows = db_interface.run_query(query, params, field_param)
         return rows
 
-    query = "SELECT * FROM " + table_name + " WHERE is_deleted = False"
+    query = "SELECT * FROM " + table_name + " WHERE is_deleted = False LIMIT " + limit
     rows = db_interface.run_query(query)
     return rows
 
@@ -220,9 +220,9 @@ class Post(DBModel):
 
         return post
 
-    def _get_posts(self, post_filter=None):
+    def _get_posts(self, limit, post_filter=None):
         if post_filter:
-            rows = read_rows(self.table_name, post_filter)
+            rows = read_rows(self.table_name, post_filter, limit=limit)
             posts = []
 
             for r in rows:
@@ -231,7 +231,7 @@ class Post(DBModel):
 
             return posts
 
-        rows = read_rows(self.table_name)
+        rows = read_rows(self.table_name, limit=limit)
         posts = []
 
         for r in rows:
@@ -240,11 +240,11 @@ class Post(DBModel):
 
         return posts
 
-    def query_posts(self, post_filter=None):
+    def query_posts(self, post_filter=None, limit=20):
         if post_filter:
-            self._get_posts(post_filter)
+            self._get_posts(limit, post_filter)
 
-        posts = self._get_posts()
+        posts = self._get_posts(limit)
         return posts
 
 
