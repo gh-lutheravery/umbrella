@@ -265,7 +265,17 @@ class Category(DBModel):
     def __str__(self):
         return self.title
 
-    def query_categories(self):
+    def query_categories(self, ind_cat_filter=None):
+        if ind_cat_filter:
+            rows = db_interface.read_rows(self.table_name, cond=ind_cat_filter)
+
+            id, title, content, desc, post_count, _ = rows[0]
+
+            cat = Category(title, desc, post_count)
+            cat.set_id(id)
+
+            return cat
+
         rows = db_interface.read_rows(self.table_name)
         cats = []
         for r in rows:
