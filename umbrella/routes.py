@@ -95,7 +95,7 @@ def post(post_id):
         flash('Comment has been posted.')
         return redirect(url_for('post', post_id=post_id))
 
-    post = read_or_abort('post', ('id', post_id))
+    post = read_or_abort('post', ('id', post_id))[0]
     post_comment = models.PostComment(post.title,
                                       post.content,
                                       post.author_id,
@@ -114,7 +114,7 @@ def read_or_abort(table_name, filter):
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
-    post = read_or_abort('post', ('id', post_id))
+    post = read_or_abort('post', ('id', post_id))[0]
     if post.author_id != current_user.id:
         # user is forbidden
         abort(403)
@@ -132,7 +132,7 @@ def update_post(post_id):
 @app.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
 def delete_post(post_id):
-    post = read_or_abort('post', ('id', post_id))
+    post = read_or_abort('post', ('id', post_id))[0]
     if post.author_id != current_user.id:
         # user is forbidden
         abort(403)
