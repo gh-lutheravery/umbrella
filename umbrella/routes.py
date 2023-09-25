@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from umbrella import app, bcrypt
 from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm, CommentForm
 import umbrella.models as models
+import umbrella.db_interface as db_interface
 from flask_login import login_user, logout_user, login_required, current_user
 
 

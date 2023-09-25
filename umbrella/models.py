@@ -1,5 +1,4 @@
 import math
-
 import umbrella.db_interface as db_interface
 from umbrella import login_manager
 from flask_login import UserMixin

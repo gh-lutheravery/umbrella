@@ -3,7 +3,7 @@ from flask_login import current_user
 from flask_ckeditor import CKEditorField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-import umbrella.models as models
+import umbrella.db_interface as db_interface
 
 
 class RegistrationForm(FlaskForm):
