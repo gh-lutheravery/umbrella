@@ -121,7 +121,7 @@ def get_obj_attrs(obj):
     return attrs
 
 
-def update_row(form_obj, table_name, cond_filter, soft_delete_flag=None):
+def update_row(columns, values, table_name, cond_filter, soft_delete_flag=None):
     if soft_delete_flag:
         update_query = f"""
             UPDATE {table_name}
@@ -134,12 +134,8 @@ def update_row(form_obj, table_name, cond_filter, soft_delete_flag=None):
         run_query(update_query, params)
 
     else:
-        # Extract attribute names and values from the object
-        attributes = get_obj_attrs(form_obj)
-        attribute_values = [getattr(form_obj, attr) for attr in attributes]
-
         # Build the SET clause for the UPDATE query
-        set_clauses = [f"{attr} = %s" for attr in attributes]
+        set_clauses = [f"{attr} = %s" for attr in columns]
         set_clause_str = ", ".join(set_clauses)
 
         # Define the UPDATE query
@@ -149,7 +145,7 @@ def update_row(form_obj, table_name, cond_filter, soft_delete_flag=None):
         WHERE {cond_filter[0]} = %s;
         """
 
-        params = [attribute_values + [getattr(form_obj, cond_filter[1])]]
+        params = [values + cond_filter[1]]
         run_query(update_query, params)
 
 
