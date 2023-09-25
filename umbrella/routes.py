@@ -148,4 +148,10 @@ def search():
         abort(400)
 
     posts = read_or_abort('post', ('title', search_query))
-    return render_template('search.html', title=search_query + ' Search Results', posts=posts)
+
+    page = request.args.get('page', default=0, type=int)
+    paginated_posts = models.get_paginated_items(posts, per_page=15, page=page)
+
+    return render_template('search.html',
+                           title=search_query + ' Search Results',
+                           posts=paginated_posts)
