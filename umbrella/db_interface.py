@@ -38,17 +38,32 @@ def run_query(query: str, params=None, field_param=None):
         rows = ()
         return rows
 
-def read_rows(table_name, limit=100, cond=None):
+def read_rows(table_name, limit=None, cond=None):
     if cond:
         query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False"
         params = [cond[1]]
         field_param = cond[0]
-        rows = run_query(query, params, field_param)
-        return rows
 
-    query = "SELECT * FROM " + table_name + " WHERE is_deleted = False LIMIT " + limit
-    rows = run_query(query)
+        if limit:
+            limit_query = get_limited_q(limit, query)
+            rows = run_query(limit_query, params, field_param)
+        else:
+            rows = run_query(query, params, field_param)
+
+    else:
+        query = "SELECT * FROM " + table_name + " WHERE is_deleted = False"
+
+        if limit:
+            limit_query = get_limited_q(limit, query)
+            rows = run_query(limit_query)
+        else:
+            rows = run_query(query)
+
     return rows
+
+
+def get_limited_q(limit, query):
+    return query + " LIMIT " + str(limit)
 
 
 def create_table(table_name, columns):
