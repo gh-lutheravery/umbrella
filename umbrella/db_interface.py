@@ -85,7 +85,7 @@ def create_table(table_name, columns: list[tuple]):
     query = query.rstrip(",\n")
 
     query += "\n);"
-
+    print(query)
     run_query(query)
 
 
@@ -116,7 +116,10 @@ def get_obj_attrs(obj):
     attrs = []
     for attr in dir(obj):
         if not callable(getattr(obj, attr)) and not attr.startswith("__"):
-            attrs.append(attr)
+            # check only for child class attrs of DBModel
+            # in order to only get table columns
+            if attr in obj.__class__.__dict__:
+                attrs.append(attr)
 
     return attrs
 
