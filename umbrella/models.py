@@ -81,7 +81,7 @@ class Post(DBModel):
         ("title", "varchar(255)", "UNIQUE NOT NULL"),
         ("content", "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
-        ("view_count", "bigint", "NOT NULL"),
+        ("view_count", "bigserial", "NOT NULL"),
         ("author_id", "int", "REFERENCES profile(id)"),
         ("category_id", "int", "REFERENCES category(id)"),
         ("is_deleted", "boolean"),
@@ -249,7 +249,7 @@ class Category(DBModel):
         ("id", "serial", "PRIMARY KEY"),
         ("title", "varchar(255)", "UNIQUE NOT NULL"),
         ("desc", "varchar(255)"),
-        ("post_count", "bigint", "NOT NULL"),
+        ("post_count", "bigserial", "NOT NULL"),
         ("is_deleted", "boolean"),
     ]
 
@@ -286,3 +286,15 @@ class Category(DBModel):
             cats.append(cat)
 
         return cats
+
+user = User('user20', 'ohyeah', 'user20@gmail.com', 'my bio')
+db_interface.insert_table('profile', user, default_id_name='id')
+User().query_users(('username', 'user20'))
+
+category = Category('History', 'The history category', 0)
+
+post = Post('user20', 'ohyeah', 0, 1, 2)
+db_interface.insert_table('post', post, default_id_name='id')
+
+db_interface.read_rows('profile', limit=3)
+
