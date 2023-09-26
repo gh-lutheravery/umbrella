@@ -88,6 +88,23 @@ def create_table(table_name, columns: list[tuple]):
     query += "\n);"
     run_query(query)
 
+def flatten_query_result(jagged_list):
+    flat_list = []
+    for sub_tuple in jagged_list:
+        for sub_item in sub_tuple:
+            flat_list.append(sub_item)
+    return flat_list
+
+
+def get_col_values(columns, obj, default_id_name=None):
+    column_values = []
+    for col in columns:
+        if default_id_name and col == default_id_name:
+            column_values.append('DEFAULT')
+            continue
+        value = getattr(obj, col)
+        column_values.append(value)
+    return column_values
 
 def insert_table(table_name, form_obj, default_id_name=None):
     get_columns_query = \
@@ -97,33 +114,23 @@ def insert_table(table_name, form_obj, default_id_name=None):
     FROM
         information_schema.columns
     WHERE
-        table_name = "{table_name}";
+        table_name = '{table_name}';
     """
+
     real_columns = run_query(get_columns_query)
+    real_columns_flat = flatten_query_result(real_columns)
 
-    # Extract attribute names and values from the object
-    attributes = get_obj_attrs(form_obj)
-    for a in attributes:
-        if a in real_columns:
-            pass
-        else:
-            attributes.remove(a)
-
-
-    # if id in table autoincrements
     if default_id_name:
-        attributes.append(default_id_name)
-        attribute_values = [getattr(form_obj, attr) for attr in attributes]
-        attribute_values.append("DEFAULT")
+        col_values = get_col_values(real_columns_flat, form_obj, default_id_name=default_id_name)
     else:
-        attribute_values = [getattr(form_obj, attr) for attr in attributes]
+        col_values = get_col_values(real_columns_flat, form_obj)
 
-    column_str = ', '.join(attributes)
-    param_str = ('%s,' * len(attribute_values)).rstrip(',')
+    column_str = ', '.join(real_columns_flat)
+    param_str = ('%s,' * len(col_values)).rstrip(',')
 
     insert_query = "INSERT INTO " + table_name + " (" + column_str + ") VALUES (" + param_str + ");"
 
-    run_query(insert_query, attribute_values)
+    run_query(insert_query, col_values)
 
 
 def get_obj_attrs(obj):
