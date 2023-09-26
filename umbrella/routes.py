@@ -73,7 +73,7 @@ def logout():
 def profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
-        db_interface.update_row(form, 'profile', ('id', current_user.id))
+        db_interface.update_row_obj(form, 'profile', ('id', current_user.id))
         flash('Profile has been updated.')
         return redirect(url_for('profile'))
     elif request.method == 'GET':
@@ -89,6 +89,11 @@ def create_post():
     if form.validate_on_submit():
         post = models.Post(form.title.data, form.content.data, 0, current_user.id)
         db_interface.insert_table('profile', post, default_id_name='id')
+
+        # get category of post and increment the categories' post_count
+        cat = models.Category().query_categories(('title', form.category))
+        db_interface.update_row(['post_count'], ['DEFAULT'], 'category', ('id', cat.id))
+
         flash('Post has been created.')
         return redirect(url_for('home'))
     return render_template('create_post.html', title='New Post', form=form)
@@ -126,7 +131,7 @@ def update_post(post_id):
         abort(403)
     form = PostForm()
     if form.validate_on_submit():
-        db_interface.update_row(form, 'post', ('id', post_id))
+        db_interface.update_row_obj(form, 'post', ('id', post_id))
         flash('Post has been updated.')
         return redirect(url_for('post', post_id=post_id))
     elif request.method == 'GET':
