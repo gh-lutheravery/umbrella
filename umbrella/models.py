@@ -11,7 +11,7 @@ class DBModel():
     id = 0
 
     def set_id(self, new_id):
-        if new_id != int:
+        if new_id is not int:
             raise ValueError("id param not an int.")
         self.id = new_id
 
@@ -286,15 +286,3 @@ class Category(DBModel):
             cats.append(cat)
 
         return cats
-
-user = User('user20', 'ohyeah', 'user20@gmail.com', 'my bio')
-db_interface.insert_table('profile', user, default_id_name='id')
-User().query_users(('username', 'user20'))
-
-category = Category('History', 'The history category', 0)
-
-post = Post('user20', 'ohyeah', 0, 1, 2)
-db_interface.insert_table('post', post, default_id_name='id')
-
-db_interface.read_rows('profile', limit=3)
-
