@@ -96,17 +96,17 @@ def flatten_query_result(jagged_list):
     return flat_list
 
 
-def get_col_values(columns, obj, default_id_name=None):
+def get_col_values(columns, obj):
     column_values = []
+    if 'id' in columns:
+        columns.remove('id')
+
     for col in columns:
-        if default_id_name and col == default_id_name:
-            column_values.append('DEFAULT')
-            continue
         value = getattr(obj, col)
         column_values.append(value)
     return column_values
 
-def insert_table(table_name, form_obj, default_id_name=None):
+def insert_table(table_name, form_obj):
     get_columns_query = \
     f"""
     SELECT
@@ -120,10 +120,7 @@ def insert_table(table_name, form_obj, default_id_name=None):
     real_columns = run_query(get_columns_query)
     real_columns_flat = flatten_query_result(real_columns)
 
-    if default_id_name:
-        col_values = get_col_values(real_columns_flat, form_obj, default_id_name=default_id_name)
-    else:
-        col_values = get_col_values(real_columns_flat, form_obj)
+    col_values = get_col_values(real_columns_flat, form_obj)
 
     column_str = ', '.join(real_columns_flat)
     param_str = ('%s,' * len(col_values)).rstrip(',')
