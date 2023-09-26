@@ -66,7 +66,7 @@ def get_limited_q(limit, query):
     return query + " LIMIT " + str(limit)
 
 
-def create_table(table_name, columns):
+def create_table(table_name, columns: list[tuple]):
     if not columns:
         raise ValueError("Columns list is empty.")
 
@@ -121,7 +121,7 @@ def get_obj_attrs(obj):
     return attrs
 
 
-def update_row_obj(form_obj, table_name, cond_filter, soft_delete_flag=None):
+def update_row_obj(form_obj, table_name, cond_filter: tuple, soft_delete_flag=None):
     if soft_delete_flag:
         update_query = f"""
             UPDATE {table_name}
@@ -153,7 +153,7 @@ def update_row_obj(form_obj, table_name, cond_filter, soft_delete_flag=None):
         run_query(update_query, params)
 
 
-def update_row(columns, values, table_name, cond_filter, soft_delete_flag=None):
+def update_row(columns: list, values: list, table_name, cond_filter: tuple, soft_delete_flag=None):
     if soft_delete_flag:
         update_query = f"""
             UPDATE {table_name}
@@ -181,7 +181,7 @@ def update_row(columns, values, table_name, cond_filter, soft_delete_flag=None):
         run_query(update_query, params)
 
 
-def soft_delete(table_name, cond_filter):
+def soft_delete(table_name, cond_filter: tuple):
     update_row(None, table_name, cond_filter, soft_delete_flag=True)
 
 
