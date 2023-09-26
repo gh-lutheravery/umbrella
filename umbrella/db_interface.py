@@ -38,6 +38,7 @@ def run_query(query: str, params=None, field_param=None):
         rows = ()
         return rows
 
+
 def read_rows(table_name, limit=None, cond=None):
     if cond:
         query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False"
@@ -85,13 +86,29 @@ def create_table(table_name, columns: list[tuple]):
     query = query.rstrip(",\n")
 
     query += "\n);"
-    print(query)
     run_query(query)
 
 
 def insert_table(table_name, form_obj, default_id_name=None):
+    get_columns_query = \
+    f"""
+    SELECT
+        column_name
+    FROM
+        information_schema.columns
+    WHERE
+        table_name = "{table_name}";
+    """
+    real_columns = run_query(get_columns_query)
+
     # Extract attribute names and values from the object
     attributes = get_obj_attrs(form_obj)
+    for a in attributes:
+        if a in real_columns:
+            pass
+        else:
+            attributes.remove(a)
+
 
     # if id in table autoincrements
     if default_id_name:
@@ -113,10 +130,7 @@ def get_obj_attrs(obj):
     attrs = []
     for attr in dir(obj):
         if not callable(getattr(obj, attr)) and not attr.startswith("__"):
-            # check only for child class attrs of DBModel
-            # in order to only get table columns
-            if attr not in obj.__class__.__dict__:
-                attrs.append(attr)
+            attrs.append(attr)
 
     return attrs
 
