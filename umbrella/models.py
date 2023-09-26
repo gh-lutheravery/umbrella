@@ -79,7 +79,7 @@ class Post(DBModel):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
         ("title", "varchar(255)", "UNIQUE NOT NULL"),
-        ("content", "text", "NOT NULL"),
+        ('"content"', "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
         ("view_count", "bigserial", "NOT NULL"),
         ("author_id", "int", "REFERENCES profile(id)"),
@@ -183,7 +183,7 @@ def get_paginated_items(items: list, per_page=10, page=0):
 class Comment(DBModel):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
-        ("content", "text", "NOT NULL"),
+        ('"content"', "text", "NOT NULL"),
         ("created_at", "timestamp", "DEFAULT current_timestamp NOT NULL"),
         ("author_id", "int", "REFERENCES profile(id)"),
         ("post_id", "int", "REFERENCES post(id)"),
@@ -248,7 +248,7 @@ class Category(DBModel):
     db_columns = [
         ("id", "serial", "PRIMARY KEY"),
         ("title", "varchar(255)", "UNIQUE NOT NULL"),
-        ("desc", "varchar(255)"),
+        ("description", "varchar(255)"),
         ("post_count", "bigserial", "NOT NULL"),
         ("is_deleted", "boolean"),
     ]
