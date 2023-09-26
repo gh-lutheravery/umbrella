@@ -11,7 +11,7 @@ class DBModel():
     id = 0
 
     def set_id(self, new_id):
-        if new_id is not int:
+        if not isinstance(new_id, int):
             raise ValueError("id param not an int.")
         self.id = new_id
 
