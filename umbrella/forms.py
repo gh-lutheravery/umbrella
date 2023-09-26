@@ -57,6 +57,7 @@ class UpdateProfileForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=2, max=100)])
     content = CKEditorField('Content', validators=[DataRequired()])
+    category = StringField('Category', validators=[DataRequired(), Length(min=2, max=100)])
     submit = SubmitField('Post')
 
 class CommentForm(FlaskForm):
