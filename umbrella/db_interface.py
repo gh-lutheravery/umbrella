@@ -115,7 +115,7 @@ def get_obj_attrs(obj):
         if not callable(getattr(obj, attr)) and not attr.startswith("__"):
             # check only for child class attrs of DBModel
             # in order to only get table columns
-            if attr in obj.__class__.__dict__:
+            if attr not in obj.__class__.__dict__:
                 attrs.append(attr)
 
     return attrs
