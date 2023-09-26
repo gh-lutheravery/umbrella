@@ -78,9 +78,9 @@ def create_table(table_name, columns: list[tuple]):
 
         if modifiers:
             modifiers_str = " ".join(modifiers)
-            query += f"    {column_name} {data_type} {modifiers_str},\n"
+            query += f"\t{column_name} {data_type} {modifiers_str},\n"
         else:
-            query += f"    {column_name} {data_type},\n"
+            query += f"\t{column_name} {data_type},\n"
 
     query = query.rstrip(",\n")
 
@@ -104,10 +104,7 @@ def insert_table(table_name, form_obj, default_id_name=None):
     column_str = ', '.join(attributes)
     param_str = ('%s,' * len(attribute_values)).rstrip(',')
 
-    insert_query = """
-            INSERT INTO """ + table_name + """ (""" + column_str + """)
-            VALUES (""" + param_str + """);
-            """
+    insert_query = "INSERT INTO " + table_name + " (" + column_str + ") VALUES (" + param_str + ");"
 
     run_query(insert_query, attribute_values)
 
@@ -126,11 +123,7 @@ def get_obj_attrs(obj):
 
 def update_row_obj(form_obj, table_name, cond_filter: tuple, soft_delete_flag=None):
     if soft_delete_flag:
-        update_query = f"""
-            UPDATE {table_name}
-            SET is_deleted = %s
-            WHERE {cond_filter[0]} = %s;
-            """
+        update_query = f"UPDATE {table_name} SET is_deleted = %s WHERE {cond_filter[0]} = %s;"
 
         params = [soft_delete_flag, cond_filter[1]]
 
@@ -146,11 +139,7 @@ def update_row_obj(form_obj, table_name, cond_filter: tuple, soft_delete_flag=No
         set_clause_str = ", ".join(set_clauses)
 
         # Define the UPDATE query
-        update_query = f"""
-        UPDATE {table_name}
-        SET {set_clause_str}
-        WHERE {cond_filter[0]} = %s;
-        """
+        update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
         params = [attribute_values + [getattr(form_obj, cond_filter[1])]]
         run_query(update_query, params)
@@ -158,11 +147,7 @@ def update_row_obj(form_obj, table_name, cond_filter: tuple, soft_delete_flag=No
 
 def update_row(columns: list, values: list, table_name, cond_filter: tuple, soft_delete_flag=None):
     if soft_delete_flag:
-        update_query = f"""
-            UPDATE {table_name}
-            SET is_deleted = %s
-            WHERE {cond_filter[0]} = %s;
-            """
+        update_query = f"UPDATE {table_name} SET is_deleted = %s WHERE {cond_filter[0]} = %s;"
 
         params = [soft_delete_flag, cond_filter[1]]
 
@@ -174,11 +159,7 @@ def update_row(columns: list, values: list, table_name, cond_filter: tuple, soft
         set_clause_str = ", ".join(set_clauses)
 
         # Define the UPDATE query
-        update_query = f"""
-        UPDATE {table_name}
-        SET {set_clause_str}
-        WHERE {cond_filter[0]} = %s;
-        """
+        update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
         params = [values + cond_filter[1]]
         run_query(update_query, params)
