@@ -143,52 +143,39 @@ def get_obj_attrs(obj):
     return attrs
 
 
-def update_row_obj(form_obj, table_name, cond_filter: tuple, soft_delete_flag=None):
-    if soft_delete_flag:
-        update_query = f"UPDATE {table_name} SET is_deleted = %s WHERE {cond_filter[0]} = %s;"
+def update_row_obj(form_obj, table_name, cond_filter: tuple):
+    # Extract attribute names and values from the object
+    attributes = get_obj_attrs(form_obj)
+    attribute_values = [getattr(form_obj, attr) for attr in attributes]
 
-        params = [soft_delete_flag, cond_filter[1]]
+    # Build the SET clause for the UPDATE query
+    set_clauses = [f"{attr} = %s" for attr in attributes]
+    set_clause_str = ", ".join(set_clauses)
 
-        run_query(update_query, params)
+    # Define the UPDATE query
+    update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
-    else:
-        # Extract attribute names and values from the object
-        attributes = get_obj_attrs(form_obj)
-        attribute_values = [getattr(form_obj, attr) for attr in attributes]
-
-        # Build the SET clause for the UPDATE query
-        set_clauses = [f"{attr} = %s" for attr in attributes]
-        set_clause_str = ", ".join(set_clauses)
-
-        # Define the UPDATE query
-        update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
-
-        params = [attribute_values + [getattr(form_obj, cond_filter[1])]]
-        run_query(update_query, params)
+    params = [attribute_values + [getattr(form_obj, cond_filter[1])]]
+    run_query(update_query, params)
 
 
-def update_row(columns: list, values: list, table_name, cond_filter: tuple, soft_delete_flag=None):
-    if soft_delete_flag:
-        update_query = f"UPDATE {table_name} SET is_deleted = %s WHERE {cond_filter[0]} = %s;"
+def update_row(columns: list, values: list, table_name, cond_filter: tuple):
+    # Build the SET clause for the UPDATE query
+    set_clauses = [f"{attr} = %s" for attr in columns]
+    set_clause_str = ", ".join(set_clauses)
 
-        params = [soft_delete_flag, cond_filter[1]]
+    # Define the UPDATE query
+    update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
-        run_query(update_query, params)
-
-    else:
-        # Build the SET clause for the UPDATE query
-        set_clauses = [f"{attr} = %s" for attr in columns]
-        set_clause_str = ", ".join(set_clauses)
-
-        # Define the UPDATE query
-        update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
-
-        params = [values + cond_filter[1]]
-        run_query(update_query, params)
+    params = [values + cond_filter[1]]
+    run_query(update_query, params)
 
 
 def soft_delete(table_name, cond_filter: tuple):
-    update_row(None, table_name, cond_filter, soft_delete_flag=True)
+    update_query = f"UPDATE {table_name} SET is_deleted = %s WHERE {cond_filter[0]} = %s;"
+    params = [True, cond_filter[1]]
+
+    run_query(update_query, params)
 
 
 def does_table_exist(table_name):
