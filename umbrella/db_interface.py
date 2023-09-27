@@ -144,18 +144,17 @@ def get_obj_attrs(obj):
 
 
 def update_row_obj(form_obj, table_name, cond_filter: tuple):
-    # Extract attribute names and values from the object
-    attributes = get_obj_attrs(form_obj)
-    attribute_values = [getattr(form_obj, attr) for attr in attributes]
+    cols = get_table_columns(table_name)
+    col_values = get_col_values(cols, form_obj)
 
     # Build the SET clause for the UPDATE query
-    set_clauses = [f"{attr} = %s" for attr in attributes]
+    set_clauses = [f"{col} = %s" for col in cols]
     set_clause_str = ", ".join(set_clauses)
 
     # Define the UPDATE query
     update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
-    params = [attribute_values + [getattr(form_obj, cond_filter[1])]]
+    col_values.append(cond_filter[1])
     run_query(update_query, params)
 
 
