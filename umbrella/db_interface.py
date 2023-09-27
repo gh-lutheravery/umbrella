@@ -155,15 +155,13 @@ def update_row_obj(form_obj, table_name, cond_filter: tuple):
     update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
     col_values.append(cond_filter[1])
-    run_query(update_query, params)
+    run_query(update_query, col_values)
 
 
 def update_row(columns: list, values: list, table_name, cond_filter: tuple):
-    # Build the SET clause for the UPDATE query
     set_clauses = [f"{attr} = %s" for attr in columns]
     set_clause_str = ", ".join(set_clauses)
 
-    # Define the UPDATE query
     update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
     params = [values + cond_filter[1]]
