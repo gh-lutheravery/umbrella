@@ -106,23 +106,27 @@ def get_col_values(columns, obj):
         column_values.append(value)
     return column_values
 
-def insert_table(table_name, form_obj):
+def get_table_columns(table_name):
     get_columns_query = \
-    f"""
-    SELECT
-        column_name
-    FROM
-        information_schema.columns
-    WHERE
-        table_name = '{table_name}';
-    """
+        f"""
+        SELECT
+            column_name
+        FROM
+            information_schema.columns
+        WHERE
+            table_name = '{table_name}';
+        """
 
-    real_columns = run_query(get_columns_query)
-    real_columns_flat = flatten_query_result(real_columns)
+    table_columns = run_query(get_columns_query)
+    table_columns_flat = flatten_query_result(table_columns)
+    return table_columns_flat
 
-    col_values = get_col_values(real_columns_flat, form_obj)
+def insert_table(table_name, form_obj):
+    real_columns = get_table_columns(table_name)
 
-    column_str = ', '.join(real_columns_flat)
+    col_values = get_col_values(real_columns, form_obj)
+
+    column_str = ', '.join(real_columns)
     param_str = ('%s,' * len(col_values)).rstrip(',')
 
     insert_query = "INSERT INTO " + table_name + " (" + column_str + ") VALUES (" + param_str + ");"
