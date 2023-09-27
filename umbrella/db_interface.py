@@ -164,8 +164,8 @@ def update_row(columns: list, values: list, table_name, cond_filter: tuple):
 
     update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
 
-    params = [values + cond_filter[1]]
-    run_query(update_query, params)
+    values.append(cond_filter[1])
+    run_query(update_query, values)
 
 
 def soft_delete(table_name, cond_filter: tuple):
