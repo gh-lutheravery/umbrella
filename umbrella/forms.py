@@ -61,5 +61,5 @@ class PostForm(FlaskForm):
     submit = SubmitField('Post')
 
 class CommentForm(FlaskForm):
-    content = CKEditorField('Content', validators=[DataRequired()])
+    content = StringField('Content', validators=[DataRequired()])
     submit = SubmitField('Comment')
