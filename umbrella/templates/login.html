@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Log In</legend>
+
+        </form>
+    </div>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Not an umbrella member yet? <a class="ml-2" href="{{ url_for('register') }}">Sign up</a>
+        </small>
+    </div>
+{% endblock content %}
