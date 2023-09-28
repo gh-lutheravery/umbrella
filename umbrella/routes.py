@@ -68,9 +68,18 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route("/profile", methods=['GET', 'POST'])
+@app.route("/profile/<int:profile_id>")
+def profile(profile_id):
+    profiles = models.User().query_users(('id', profile_id))
+    if len(profiles) == 0:
+        abort(404)
+    profile = profiles[0]
+    return render_template('profile.html', title='Profile', profile=profile)
+
+
+@app.route("/profile/update", methods=['GET', 'POST'])
 @login_required
-def profile():
+def update_profile():
     form = UpdateProfileForm()
     if form.validate_on_submit():
         db_interface.update_row_obj(form, 'profile', ('id', current_user.id))
