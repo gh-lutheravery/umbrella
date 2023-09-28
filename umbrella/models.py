@@ -195,11 +195,11 @@ class Comment(DBModel):
 
     table_name = "comment"
 
-    def __init__(self, content=None, author_id=None, post_id=None):
+    def __init__(self, content=None, author=None, post_id=None):
         self.content = content
         self.created_at = datetime.datetime.now()
         self.post_id = post_id
-        self.author_id = author_id
+        self.author = author
 
     def __str__(self):
         return self.id
@@ -214,8 +214,9 @@ class Comment(DBModel):
             row = db_interface.read_rows(self.table_name, cond=comment_filter)
 
             id, content, created_at, author_id, post_id, _ = row[0]
+            author = User().query_users(('id', author_id))
 
-            com = Comment(content, author_id, post_id)
+            com = Comment(content, author, post_id)
             com.set_date(created_at)
             com.set_id(id)
 
