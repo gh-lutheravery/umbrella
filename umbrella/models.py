@@ -89,12 +89,12 @@ class Post(DBModel):
 
     table_name = "post"
 
-    def __init__(self, title=None, content=None, view_count=None, author_id=None, category_id=None):
+    def __init__(self, title=None, content=None, view_count=None, author=None, category=None):
         self.title = title
         self.content = content
         self.view_count = view_count
-        self.author_id = author_id
-        self.category_id = category_id
+        self.author = author
+        self.category = category
         self.created_at = datetime.datetime.now()
 
     def __str__(self):
@@ -108,7 +108,10 @@ class Post(DBModel):
     def _populate_post(self, row):
         id, title, content, created_at, view_count, author_id, category_id, _ = row
 
-        post = Post(title, content, view_count, author_id, category_id)
+        user = User().query_users(('id', author_id))
+        cat = Category().query_categories(('id', category_id))
+
+        post = Post(title, content, view_count, user, cat)
         post.set_date(created_at)
         post.set_id(id)
 
