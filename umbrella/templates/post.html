@@ -1,24 +1,23 @@
 {% extends "layout.html" %}
 {% block content %}
 {{ ckeditor.load() }}
-  <article class="media content-section">
-    <div class="media-body">
-      <div class="article-metadata">
-        <a class="mr-2" href="{{ url_for('user_posts', username=post_comment.post.author.username) }}">{{ post_comment.post.author.username }}</a>
-        <small class="text-muted">{{ post_comment.post.date_posted.strftime('%Y-%m-%d') }}</small>
-        {% if post_comment.post.author == current_user %}
-          <div>
-            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post_comment.post.id) }}">Update</a>
-            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+    <article class="media content-section">
+        <div class="media-body">
+          <div class="article-metadata">
+            <a class="mr-2" href="{{ url_for('user_posts', username=post_comment.post.author.username) }}">{{ post_comment.post.author.username }}</a>
+            <small class="text-muted">{{ post_comment.post.date_posted.strftime('%Y-%m-%d') }}</small>
+            {% if post_comment.post.author == current_user %}
+              <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post_comment.post.id) }}">Update</a>
+                <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+              </div>
+            {% endif %}
           </div>
-        {% endif %}
-      </div>
-      <h2 class="article-title">{{ post_comment.post.title }}</h2>
-      {{ post_comment.post.content | safe }}
-    </div>
-  </article>
+          <h2 class="article-title">{{ post_comment.post.title }}</h2>
+          {{ post_comment.post.content | safe }}
+        </div>
+    </article>
 
-  {% for com in post_comment.comments %}
     <div class="row d-flex justify-content-center">
       <div class="col-md-8 col-lg-6">
         <div class="card shadow-0 border" style="background-color: #f0f2f5;">
@@ -29,26 +28,29 @@
               <label class="form-label" for="addANote">Add a comment</label>
             </div>
 
-            <div class="card mb-4">
-              <div class="card-body">
-                <p>{{ com.content }}</p>
+            {% for com in post_comment.comments %}
 
-                <div class="d-flex justify-content-between">
-                  <div class="d-flex flex-row align-items-center">
-                    <p class="small mb-0 ms-2">{{ com.author.username }}</p>
-                  </div>
-                  <div class="d-flex flex-row align-items-center">
-                    <p class="small text-muted mb-0">{{ com.created_at.strftime('%Y-%m-%d') }}</p>
+                <div class="card mb-4">
+                  <div class="card-body">
+                    <p>{{ com.content }}</p>
+
+                    <div class="d-flex justify-content-between">
+                      <div class="d-flex flex-row align-items-center">
+                        <p class="small mb-0 ms-2">{{ com.author.username }}</p>
+                      </div>
+                      <div class="d-flex flex-row align-items-center">
+                        <p class="small text-muted mb-0">{{ com.created_at.strftime('%Y-%m-%d') }}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+
+            {% endfor %}
 
           </div>
         </div>
       </div>
     </div>
-  {% endfor %}
   <!-- Modal -->
 
 {% endblock content %}
