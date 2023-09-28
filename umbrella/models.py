@@ -108,8 +108,8 @@ class Post(DBModel):
     def _populate_post(self, row):
         id, title, content, created_at, view_count, author_id, category_id, _ = row
 
-        user = User().query_users(('id', author_id))
-        cat = Category().query_categories(('id', category_id))
+        user = User().query_users(('id', author_id))[0]
+        cat = Category().query_categories(('id', category_id))[0]
 
         post = Post(title, content, view_count, user, cat)
         post.set_date(created_at)
@@ -214,7 +214,7 @@ class Comment(DBModel):
             row = db_interface.read_rows(self.table_name, cond=comment_filter)
 
             id, content, created_at, author_id, post_id, _ = row[0]
-            author = User().query_users(('id', author_id))
+            author = User().query_users(('id', author_id))[0]
 
             com = Comment(content, author, post_id)
             com.set_date(created_at)
