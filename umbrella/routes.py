@@ -123,7 +123,7 @@ def post(post_id):
                                       post.created_at
                                       )
 
-    return render_template('post.html', title=post_comment.post.title, post=post_comment)
+    return render_template('post.html', title=post_comment.post.title, post_comment=post_comment)
 
 def read_or_abort(table_name, filter):
     posts = models.Post().query_posts(filter)
