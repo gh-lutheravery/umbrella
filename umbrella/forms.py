@@ -41,6 +41,7 @@ class UpdateProfileForm(FlaskForm):
     submit = SubmitField('Update')
 
     def validate_username(self, username):
+        # if username was changed
         if username.data != current_user.username:
             rows = db_interface.read_rows('profile', ('username', username))
 
@@ -59,6 +60,13 @@ class PostForm(FlaskForm):
     content = CKEditorField('Content', validators=[DataRequired()])
     category = StringField('Category', validators=[DataRequired(), Length(min=2, max=100)])
     submit = SubmitField('Post')
+
+
+    def validate_category(self, category):
+        rows = db_interface.read_rows('category', ('title', category))
+
+        if len(rows) == 0:
+            raise ValidationError('A category with that title does not exist; choose a different one.')
 
 class CommentForm(FlaskForm):
     content = StringField('Content', validators=[DataRequired()])
