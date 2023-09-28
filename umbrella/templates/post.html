@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+{{ ckeditor.load() }}
+  <article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="{{ url_for('user_posts', username=post_comment.post.author.username) }}">{{ post_comment.post.author.username }}</a>
+        <small class="text-muted">{{ post_comment.post.date_posted.strftime('%Y-%m-%d') }}</small>
+        {% if post_comment.post.author == current_user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post_comment.post.id) }}">Update</a>
+            <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+          </div>
+        {% endif %}
+      </div>
+      <h2 class="article-title">{{ post_comment.post.title }}</h2>
+      {{ post_comment.post.content | safe }}
+    </div>
+  </article>
+
+  <!-- Modal -->
+
+{% endblock content %}
