@@ -76,6 +76,7 @@ def profile(profile_id):
 @login_required
 def update_profile():
     form = UpdateProfileForm()
+
     if form.validate_on_submit():
         db_interface.update_row_obj(form, 'profile', ('id', current_user.id))
         flash('Profile has been updated.')
@@ -100,6 +101,7 @@ def create_post():
 
         flash('Post has been created.')
         return redirect(url_for('home'))
+
     return render_template('create_post.html', title='New Post', form=form)
 
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
@@ -110,7 +112,7 @@ def post(post_id):
         flash('Comment has been posted.')
         return redirect(url_for('post', post_id=post_id))
 
-    post = read_or_abort('post', ('id', post_id))[0]
+    post = read_or_abort_p(('id', post_id))[0]
     post_comment = models.PostComment(post.title,
                                       post.content,
                                       post.author_id,
@@ -120,7 +122,7 @@ def post(post_id):
 
     return render_template('post.html', title=post_comment.post.title, post_comment=post_comment)
 
-def read_or_abort(table_name, filter):
+def read_or_abort_p(filter):
     posts = models.Post().query_posts(filter)
     if len(posts) == 0:
         abort(404, description="Post not found")
@@ -129,11 +131,13 @@ def read_or_abort(table_name, filter):
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_post(post_id):
-    post = read_or_abort('post', ('id', post_id))[0]
+    post = read_or_abort_p(('id', post_id))[0]
+
     if post.author_id != current_user.id:
         # user is forbidden
         abort(403)
     form = PostForm()
+
     if form.validate_on_submit():
         db_interface.update_row_obj(form, 'post', ('id', post_id))
         flash('Post has been updated.')
@@ -147,10 +151,11 @@ def update_post(post_id):
 @app.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
 def delete_post(post_id):
-    post = read_or_abort('post', ('id', post_id))[0]
+    post = read_or_abort_p(('id', post_id))[0]
     if post.author_id != current_user.id:
         # user is forbidden
         abort(403)
+
     db_interface.soft_delete('post', ('id', post_id))
     flash('Post has been deleted.')
     return redirect(url_for('home'))
@@ -162,7 +167,7 @@ def search():
     if not(search_query):
         abort(400)
 
-    posts = read_or_abort('post', ('title', search_query))
+    posts = read_or_abort_p(('title', search_query))
 
     last_page = models.Pagination.get_last_page(len(posts), 15)
     page = request.args.get('page', default=0, type=int)
