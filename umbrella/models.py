@@ -32,7 +32,7 @@ class User(DBModel, UserMixin):
         ("is_deleted", "boolean"),
     ]
 
-    table_name = "user"
+    table_name = "profile"
 
     def __init__(self, username=None, password=None, email=None, bio=None):
         self.username = username
