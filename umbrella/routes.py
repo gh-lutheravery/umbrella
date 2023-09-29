@@ -147,7 +147,7 @@ def update_post(post_id):
         form.title.data = post.title
         form.content.data = post.content
 
-    return render_template('update_post.html', title='Update Post', form=form, legend='Update Post')
+    return render_template('create_post.html', title='Update Post', form=form)
 
 @app.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
@@ -177,4 +177,4 @@ def search():
     paginated_posts = models.get_paginated_items(posts, per_page=15, page=page)
     return render_template('search.html',
                            title=search_query + ' Search Results',
-                           posts=paginated_posts)
+                           posts=paginated_posts, last_page=last_page, query=search_query)
