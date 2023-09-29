@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        <small class="text-muted">Joined Umbrella at {{ profile.created_at.strftime('%Y-%m-%d') }}</small>
+        {% if profile == current_user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post_comment.post.id) }}">Update</a>
+          </div>
+        {% endif %}
+      </div>
+      <h2 class="article-title">{{ profile.username }}</h2>
+      {{ profile.bio }}
+    </div>
+</article>
+
+{% endblock content %}
