@@ -259,10 +259,10 @@ class Category(DBModel):
 
     table_name = "category"
 
-    def __init__(self, title=None, desc=None, post_count=None):
+    def __init__(self, title=None, description=None, post_count=None):
         self.id = 0
         self.title = title
-        self.desc = desc
+        self.description = description
         self.post_count = post_count
 
     def __str__(self):
