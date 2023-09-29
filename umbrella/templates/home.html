@@ -1,5 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
+    <div class="col-md-4">
+          <div class="content-section">
+            <h3>Sidebar</h3>
+            <p class='text-muted'>Our categories
+              <ul class="list-group">
+                {% for cat in cats %}
+                    <li class="list-group-item list-group-item-light">
+                        <a class="mr-2" href="{{ url_for('home', category=cat.id) }}">{{ cat.title }}</a>
+                    </li>
+                {% endfor %}
+              </ul>
+            </p>
+          </div>
+    </div>
+
     {% for post in posts %}
         <article class="media content-section">
           <div class="media-body">
