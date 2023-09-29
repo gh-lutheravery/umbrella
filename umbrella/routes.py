@@ -46,9 +46,9 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = db_interface.read_rows('profile', ('email', form.email.data))
-        if len(user) != 0 and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
+        users = models.User().query_users(('email', form.email.data))
+        if len(users) != 0 and bcrypt.check_password_hash(users[0].password, form.password.data):
+            login_user(users[0], remember=form.remember.data)
             flash('You are now logged in.')
             return redirect(url_for('home'))
         else:
