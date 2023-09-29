@@ -12,10 +12,10 @@ def home():
     cats = models.Category().query_categories()
     category_id = request.args.get('category', default=None)
     if category_id:
-        posts = models.Post.query_posts(models.Post(), limit=20, post_filter=('category_id', category_id))
+        posts = models.Post().query_posts(limit=20, post_filter=('category_id', category_id))
         return render_template('home.html', posts=posts, cats=cats)
 
-    posts = models.Post.query_posts(models.Post(), limit=20)
+    posts = models.Post().query_posts(limit=20)
     return render_template('home.html', posts=posts, cats=cats)
 
 
