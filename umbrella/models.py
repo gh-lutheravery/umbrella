@@ -272,7 +272,7 @@ class Category(DBModel):
         if ind_cat_filter:
             rows = db_interface.read_rows(self.table_name, cond=ind_cat_filter)
 
-            id, title, content, desc, post_count, _ = rows[0]
+            id, title, desc, post_count, _ = rows[0]
 
             cat = Category(title, desc, post_count)
             cat.set_id(id)
@@ -282,7 +282,7 @@ class Category(DBModel):
         rows = db_interface.read_rows(self.table_name)
         cats = []
         for r in rows:
-            id, title, content, desc, post_count, _ = r
+            id, title, desc, post_count, _ = r
 
             cat = Category(title, desc, post_count)
             cat.set_id(id)
