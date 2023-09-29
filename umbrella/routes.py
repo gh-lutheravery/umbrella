@@ -19,11 +19,6 @@ def home():
     return render_template('home.html', posts=posts, cats=cats)
 
 
-@app.route("/about")
-def about():
-    return "<h1>About Page</h1>"
-
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
