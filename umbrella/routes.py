@@ -10,10 +10,9 @@ from flask_login import login_user, logout_user, login_required, current_user
 @app.route("/home")
 def home():
     cats = models.Category().query_categories()
-    category_title = request.args.get('category', default=None)
-    if category_title:
-        cat_obj = models.Category().query_categories(ind_cat_filter=('title', category_title))
-        posts = models.Post.query_posts(models.Post(), limit=20, post_filter=('category_id', cat_obj.id))
+    category_id = request.args.get('category', default=None)
+    if category_id:
+        posts = models.Post.query_posts(models.Post(), limit=20, post_filter=('category_id', category_id))
         return render_template('home.html', posts=posts, cats=cats)
 
     posts = models.Post.query_posts(models.Post(), limit=20)
