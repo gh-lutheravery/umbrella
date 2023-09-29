@@ -32,7 +32,7 @@ def register():
         else:
             user = models.User(form.username.data, hashed_password_str, form.email.data, form.bio.data)
 
-        db_interface.insert_table('profile', user, default_id_name='id')
+        db_interface.insert_table('profile', user)
         flash(form.username.data + ' account has been created.')
         return redirect(url_for('login'))
 
@@ -92,7 +92,7 @@ def create_post():
     form = PostForm()
     if form.validate_on_submit():
         post = models.Post(form.title.data, form.content.data, 0, current_user.id)
-        db_interface.insert_table('profile', post, default_id_name='id')
+        db_interface.insert_table('profile', post)
 
         # get category of post and increment the categories' post_count
         cat = models.Category().query_categories(('title', form.category))
@@ -106,7 +106,7 @@ def create_post():
 def post(post_id):
     form = CommentForm()
     if form.validate_on_submit():
-        db_interface.insert_table('comment', form, 'id')
+        db_interface.insert_table('comment', form)
         flash('Comment has been posted.')
         return redirect(url_for('post', post_id=post_id))
 
