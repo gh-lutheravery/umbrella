@@ -45,9 +45,7 @@ class User(DBModel, UserMixin):
         return self.username.get_content() + ' User'
 
     def set_date(self, date):
-        if date != datetime.datetime:
-            raise ValueError("date param not a datetime object.")
-        self.created_at = date
+        self.created_at = datetime.datetime.date(date)
 
     def query_users(self, user_filter=None):
         if user_filter:
@@ -101,9 +99,7 @@ class Post(DBModel):
         return self.title
 
     def set_date(self, date):
-        if date != datetime.datetime:
-            raise ValueError("date param not a datetime object.")
-        self.created_at = date
+        self.created_at = datetime.datetime.date(date)
 
     def _populate_post(self, row):
         id, title, content, created_at, view_count, author_id, category_id, _ = row
@@ -205,9 +201,7 @@ class Comment(DBModel):
         return self.id
 
     def set_date(self, date):
-        if date != datetime.datetime:
-            raise ValueError("date param not a datetime object.")
-        self.created_at = date
+        self.created_at = datetime.datetime.date(date)
 
     def query_comments(self, comment_filter=None):
         if comment_filter:
