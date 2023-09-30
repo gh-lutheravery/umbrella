@@ -57,7 +57,7 @@ class User(DBModel, UserMixin):
             user.set_date(join_date)
             user.set_id(id)
 
-            return user
+            return [user]
 
         rows = db_interface.read_rows('profile')
         users = []
@@ -214,7 +214,7 @@ class Comment(DBModel):
             com.set_date(created_at)
             com.set_id(id)
 
-            return com
+            return [com]
 
         rows = db_interface.read_rows(self.table_name)
         coms = []
