@@ -33,7 +33,7 @@ def register():
             user = models.User(form.username.data, hashed_password_str, form.email.data, form.bio.data)
 
         db_interface.insert_table('profile', user)
-        flash(form.username.data + ' account has been created.')
+        flash(f'"{form.username.data}" account has been created.')
         return redirect(url_for('login'))
 
     return render_template('register.html', title='Register', form=form)
