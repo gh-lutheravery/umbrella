@@ -18,7 +18,10 @@ class DBModel():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db_interface.read_rows('profile', cond=('id', user_id))
+    users = User().query_users(('id', user_id))
+    if len(users) != 0:
+        return users[0]
+    return None
 
 
 class User(DBModel, UserMixin):
