@@ -101,7 +101,9 @@ def create_post():
         db_interface.insert_table(post.table_name, post)
 
         # get category of post and increment the categories' post_count
-        db_interface.update_row(['post_count'], ['DEFAULT'], cat.table_name, ('id', cat.id))
+        db_interface.update_row(['post_count'], ['DEFAULT'], cat.table_name,
+                                ('id', cat.id),
+                                default_col='post_count')
 
         flash('Post has been created.')
         return redirect(url_for('home'))
