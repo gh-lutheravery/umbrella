@@ -95,7 +95,7 @@ def create_post():
         post = models.Post(form.title.data, form.content.data, 0, current_user.id)
         post.author_id = current_user.id
 
-        cat = models.Category().query_categories(('title', form.category))
+        cat = models.Category().query_categories(('title', form.category.data))
         post.category_id = cat.id
 
         db_interface.insert_table(post.table_name, post)
