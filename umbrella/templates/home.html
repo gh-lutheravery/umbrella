@@ -6,11 +6,11 @@
           <div class="list-group">
               {% for cat in cats %}
                   <a href="{{ url_for('home', category=cat.id) }}"
-                     class="list-group-item list-group-item-action flex-column align-items-start active">
+                     class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1 text-light">{{ cat.title }}</h5>
+                      <h5 class="mb-1 text-dark">{{ cat.title }}</h5>
                     </div>
-                    <p class="mb-1">{{ cat.description }}</p>
+                    <p class="mb-1 text-dark">{{ cat.description }}</p>
                   </a>
               {% endfor %}
           </div>
