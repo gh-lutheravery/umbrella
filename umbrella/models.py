@@ -277,7 +277,7 @@ class Category(DBModel):
             cat = Category(title, desc, post_count)
             cat.set_id(id)
 
-            return cat
+            return [cat]
 
         rows = db_interface.read_rows(self.table_name)
         cats = []
