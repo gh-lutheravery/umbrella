@@ -93,10 +93,14 @@ def create_post():
     form = PostForm()
     if form.validate_on_submit():
         post = models.Post(form.title.data, form.content.data, 0, current_user.id)
+        post.author_id = current_user.id
+
+        cat = models.Category().query_categories(('title', form.category))
+        post.category_id = cat.id
+
         db_interface.insert_table(post.table_name, post)
 
         # get category of post and increment the categories' post_count
-        cat = models.Category().query_categories(('title', form.category))
         db_interface.update_row(['post_count'], ['DEFAULT'], cat.table_name, ('id', cat.id))
 
         flash('Post has been created.')
