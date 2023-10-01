@@ -158,8 +158,14 @@ def update_row_obj(form_obj, table_name, cond_filter: tuple):
     run_query(update_query, col_values)
 
 
-def update_row(columns: list, values: list, table_name, cond_filter: tuple):
-    set_clauses = [f"{attr} = %s" for attr in columns]
+def update_row(columns: list, values: list, table_name, cond_filter: tuple, default_col=None):
+    set_clauses = []
+    for col in columns:
+        if default_col and default_col == col:
+            set_clauses.append(f"{col} = DEFAULT")
+            continue
+        set_clauses.append(f"{col} = %s")
+
     set_clause_str = ", ".join(set_clauses)
 
     update_query = f"UPDATE {table_name} SET {set_clause_str} WHERE {cond_filter[0]} = %s;"
