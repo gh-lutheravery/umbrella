@@ -96,6 +96,8 @@ class Post(DBModel):
         self.view_count = view_count
         self.author = author
         self.category = category
+        self.author_id = 0
+        self.category_id = 0
         self.created_at = datetime.datetime.now()
 
     def __str__(self):
@@ -197,6 +199,7 @@ class Comment(DBModel):
     def __init__(self, content=None, author=None, post_id=None):
         self.content = content
         self.created_at = datetime.datetime.now()
+        self.author_id = 0
         self.post_id = post_id
         self.author = author
 
