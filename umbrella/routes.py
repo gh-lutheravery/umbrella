@@ -84,8 +84,9 @@ def update_profile():
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.bio.data = current_user.bio
 
-    return render_template('profile.html', title='Profile', form=form)
+    return render_template('update_profile.html', title='Profile', form=form)
 
 @app.route("/create-post", methods=['GET', 'POST'])
 @login_required
