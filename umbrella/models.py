@@ -208,14 +208,17 @@ class Comment(DBModel):
         if comment_filter:
             row = db_interface.read_rows(self.table_name, cond=comment_filter)
 
-            id, content, created_at, author_id, post_id, _ = row[0]
-            author = User().query_users(('id', author_id))[0]
+            if len(row) > 0:
+                id, content, created_at, author_id, post_id, _ = row[0]
+                author = User().query_users(('id', author_id))[0]
 
-            com = Comment(content, author, post_id)
-            com.created_at = created_at
-            com.set_id(id)
+                com = Comment(content, author, post_id)
+                com.created_at = created_at
+                com.set_id(id)
 
-            return [com]
+                return [com]
+
+            return []
 
         rows = db_interface.read_rows(self.table_name)
         coms = []
