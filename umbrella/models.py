@@ -135,7 +135,8 @@ class Post(DBModel):
 
     def query_posts(self, post_filter=None, limit=20):
         if post_filter:
-            self._get_posts(limit, post_filter)
+            posts = self._get_posts(limit, post_filter)
+            return posts
 
         posts = self._get_posts(limit)
         return posts
@@ -237,6 +238,7 @@ class Comment(DBModel):
 class PostComment():
     def __init__(self, post_id):
         self.post = Post().query_posts(('id', post_id))[0]
+        print('len: ', len(Post().query_posts(('id', post_id))))
         self.comments = self._query_post_comments()
 
     def _query_post_comments(self):
