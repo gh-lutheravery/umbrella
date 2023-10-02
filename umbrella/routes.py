@@ -1,3 +1,5 @@
+import copy
+
 from flask import render_template, url_for, flash, redirect, request, abort
 from umbrella import app, bcrypt
 from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm, CommentForm
@@ -78,9 +80,16 @@ def update_profile():
     form = UpdateProfileForm()
 
     if form.validate_on_submit():
-        db_interface.update_row_obj(form, 'profile', ('id', current_user.id))
+        if form.bio:
+            user = models.User(form.username.data, None, form.email.data,
+                               form.bio)
+        else:
+            user = models.User(form.username.data, None, form.email.data)
+
+        db_interface.update_row_obj(user, 'profile', ('id', current_user.id))
         flash('Profile has been updated.')
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile.html', title='Profile', profile=profile))
+
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
@@ -144,7 +153,11 @@ def update_post(post_id):
     form = PostForm()
 
     if form.validate_on_submit():
-        db_interface.update_row_obj(form, post.table_name, ('id', post_id))
+        new_post = post
+        new_post.title = form.title.data
+        new_post.content = form.content.data
+
+        db_interface.update_row_obj(new_post, post.table_name, ('id', post_id))
         flash('Post has been updated.')
         return redirect(url_for('post', post_id=post_id))
     elif request.method == 'GET':
