@@ -120,7 +120,7 @@ def post(post_id):
         com.author_id = current_user.id
         db_interface.insert_table('comment', com)
         flash('Comment has been posted.')
-        return redirect(url_for('post', title=post_comment.post.title,
+        return redirect(url_for('post', post_id=post_id, title=post_comment.post.title,
                            post_comment=post_comment, form=form))
 
     return render_template('post.html', title=post_comment.post.title,
