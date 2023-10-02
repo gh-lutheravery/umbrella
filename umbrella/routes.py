@@ -113,15 +113,16 @@ def create_post():
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     form = CommentForm()
+    post_comment = models.PostComment(post_id)
+
     if form.validate_on_submit():
         db_interface.insert_table('comment', form)
         flash('Comment has been posted.')
-        return redirect(url_for('post', post_id=post_id))
+        return redirect(url_for('post', title=post_comment.post.title,
+                           post_comment=post_comment, form=form))
 
-    post = read_or_abort_p(('id', post_id))[0]
-    post_comment = models.PostComment(post.author_id)
-
-    return render_template('post.html', title=post_comment.post.title, post_comment=post_comment)
+    return render_template('post.html', title=post_comment.post.title,
+                           post_comment=post_comment, form=form)
 
 def read_or_abort_p(filter):
     posts = models.Post().query_posts(filter)
