@@ -81,10 +81,15 @@ def update_profile():
 
     if form.validate_on_submit():
         if form.bio:
-            user = models.User(form.username.data, None, form.email.data,
-                               form.bio)
+            user = copy.deepcopy(current_user)
+            user.username = form.username.data
+            user.email = form.email.data
+            user.bio = form.bio.data
+
         else:
-            user = models.User(form.username.data, None, form.email.data)
+            user = copy.deepcopy(current_user)
+            user.username = form.username.data
+            user.email = form.email.data
 
         db_interface.update_row_obj(user, 'profile', ('id', current_user.id))
         flash('Profile has been updated.')
