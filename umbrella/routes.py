@@ -116,7 +116,9 @@ def post(post_id):
     post_comment = models.PostComment(post_id)
 
     if form.validate_on_submit():
-        db_interface.insert_table('comment', form)
+        com = models.Comment(form.content.data, current_user, post_id)
+        com.author_id = current_user.id
+        db_interface.insert_table('comment', com)
         flash('Comment has been posted.')
         return redirect(url_for('post', title=post_comment.post.title,
                            post_comment=post_comment, form=form))
