@@ -66,7 +66,7 @@ class User(DBModel, UserMixin):
             id, username, email, _, bio, join_date = r
 
             user = User(username, None, email, bio)
-            user.set_date(join_date)
+            user.created_at = join_date
             user.set_id(id)
 
             users.append(user)
@@ -226,7 +226,7 @@ class Comment(DBModel):
             id, content, created_at, author_id, post_id, _ = r
 
             com = Comment(content, author_id, post_id)
-            com.set_date(created_at)
+            com.created_at = created_at
             com.set_id(id)
 
             coms.append(com)
@@ -238,7 +238,7 @@ class PostComment():
     def __init__(self, title, content, author_id, post_id, created_at):
         self.post = Post(title, content, author_id)
         self.post.set_id(post_id)
-        self.post.set_date(created_at)
+        self.post.created_at = created_at
 
         self.comments = self._query_post_comments()
 
