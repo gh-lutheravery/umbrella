@@ -159,6 +159,9 @@ def update_row_obj(form_obj, table_name, cond_filter: tuple):
 
 
 def update_row(columns: list, values: list, table_name, cond_filter: tuple, default_col=None):
+    if len(values) == 0 and default_col == None:
+        raise ValueError('No new values given in update_row')
+
     set_clauses = []
     for col in columns:
         if default_col and default_col == col:
