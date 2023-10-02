@@ -5,7 +5,7 @@
         <div class="media-body">
           <div class="article-metadata">
             <a class="mr-2" href="{{ url_for('profile', profile_id=post_comment.post.author.id) }}">{{ post_comment.post.author.username }}</a>
-            <small class="text-muted">{{ post_comment.post.date_posted.strftime('%Y-%m-%d') }}</small>
+            <small class="text-muted">{{ post_comment.post.created_at.strftime('%Y-%m-%d') }}</small>
             {% if post_comment.post.author == current_user %}
               <div>
                 <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('update_post', post_id=post_comment.post.id) }}">Update</a>
