@@ -93,7 +93,7 @@ def update_profile():
 
         db_interface.update_row_obj(user, 'profile', ('id', current_user.id))
         flash('Profile has been updated.')
-        return redirect(url_for('profile.html', title='Profile', profile=profile))
+        return redirect(url_for('profile', title='Profile', profile=profile))
 
     elif request.method == 'GET':
         form.username.data = current_user.username
