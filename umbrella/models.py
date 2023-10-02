@@ -47,8 +47,6 @@ class User(DBModel, UserMixin):
     def __str__(self):
         return self.username.get_content() + ' User'
 
-    def set_date(self, date):
-        self.created_at = datetime.datetime.date(date)
 
     def query_users(self, user_filter=None):
         if user_filter:
@@ -57,7 +55,7 @@ class User(DBModel, UserMixin):
             id, username, email, password, bio, join_date, _ = row[0]
 
             user = User(username, password, email, bio)
-            user.set_date(join_date)
+            user.created_at = join_date
             user.set_id(id)
 
             return [user]
@@ -103,9 +101,6 @@ class Post(DBModel):
     def __str__(self):
         return self.title
 
-    def set_date(self, date):
-        self.created_at = datetime.datetime.date(date)
-
     def _populate_post(self, row):
         id, title, content, created_at, view_count, author_id, category_id, _ = row
 
@@ -113,7 +108,7 @@ class Post(DBModel):
         cat = Category().query_categories(('id', category_id))[0]
 
         post = Post(title, content, view_count, user, cat)
-        post.set_date(created_at)
+        post.created_at = created_at
         post.set_id(id)
 
         return post
@@ -217,7 +212,7 @@ class Comment(DBModel):
             author = User().query_users(('id', author_id))[0]
 
             com = Comment(content, author, post_id)
-            com.set_date(created_at)
+            com.created_at = created_at
             com.set_id(id)
 
             return [com]
