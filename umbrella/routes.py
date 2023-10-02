@@ -95,7 +95,8 @@ def create_post():
         post = models.Post(form.title.data, form.content.data, 0, current_user.id)
         post.author_id = current_user.id
 
-        cat = models.Category().query_categories(('title', form.category.data))
+        # can only be one element since titles have unique constraint
+        cat = models.Category().query_categories(('title', form.category.data))[0]
         post.category_id = cat.id
 
         db_interface.insert_table(post.table_name, post)
