@@ -235,11 +235,8 @@ class Comment(DBModel):
 
 
 class PostComment():
-    def __init__(self, title, content, author_id, post_id, created_at):
-        self.post = Post(title, content, author_id)
-        self.post.set_id(post_id)
-        self.post.created_at = created_at
-
+    def __init__(self, post_id):
+        self.post = Post().query_posts(('id', post_id))[0]
         self.comments = self._query_post_comments()
 
     def _query_post_comments(self):

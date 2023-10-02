@@ -119,12 +119,7 @@ def post(post_id):
         return redirect(url_for('post', post_id=post_id))
 
     post = read_or_abort_p(('id', post_id))[0]
-    post_comment = models.PostComment(post.title,
-                                      post.content,
-                                      post.author_id,
-                                      post.id,
-                                      post.created_at
-                                      )
+    post_comment = models.PostComment(post.author_id)
 
     return render_template('post.html', title=post_comment.post.title, post_comment=post_comment)
 
