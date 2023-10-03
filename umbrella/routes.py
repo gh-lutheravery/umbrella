@@ -196,7 +196,7 @@ def search():
     page = request.args.get('page', default=1, type=int)
 
     posts = read_or_abort_p(('title', search_query))
-    pagination = Pagination(page=page, total=posts.count())
+    pagination = Pagination(page=page, total=len(posts))
 
     return render_template('search.html',
                            title=search_query + ' Search Results',
