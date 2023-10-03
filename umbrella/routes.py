@@ -145,8 +145,12 @@ def post(post_id):
     return render_template('post.html', title=post_comment.post.title,
                            post_comment=post_comment, form=form)
 
-def read_or_abort_p(filter):
-    posts = models.Post().query_posts(filter)
+def read_or_abort_p(filter, use_like=False):
+    if use_like:
+        posts = models.Post().query_posts(filter, use_like=True)
+    else:
+        posts = models.Post().query_posts(filter)
+
     if len(posts) == 0:
         abort(404, description="Post not found")
     return posts
@@ -195,8 +199,9 @@ def search():
         abort(400)
     page = request.args.get('page', default=1, type=int)
 
-    posts = read_or_abort_p(('title', search_query))
-    pagination = Pagination(page=page, per_page=1, total=len(posts))
+    posts = read_or_abort_p(('title', search_query), use_like=True)
+
+    pagination = Pagination(page=page, per_page=10, total=len(posts))
 
     return render_template('search.html',
                            title=search_query + ' Search Results',
