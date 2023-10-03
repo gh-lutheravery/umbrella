@@ -131,12 +131,15 @@ def post(post_id):
     post_comment = models.PostComment(post_id)
 
     if form.validate_on_submit():
-        com = models.Comment(form.content.data, current_user, post_id)
-        com.author_id = current_user.id
-        db_interface.insert_table('comment', com)
-        flash('Comment has been posted.')
-        return redirect(url_for('post', post_id=post_id, title=post_comment.post.title,
-                           post_comment=post_comment, form=form))
+        if current_user.is_authenticated:
+            com = models.Comment(form.content.data, current_user, post_id)
+            com.author_id = current_user.id
+            db_interface.insert_table('comment', com)
+            flash('Comment has been posted.')
+            return redirect(url_for('post', post_id=post_id))
+
+        flash('You must be logged in to comment.')
+        return redirect(url_for('post', post_id=post_id))
 
     return render_template('post.html', title=post_comment.post.title,
                            post_comment=post_comment, form=form)
