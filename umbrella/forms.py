@@ -61,6 +61,11 @@ class PostForm(FlaskForm):
     category = StringField('Category', validators=[DataRequired(), Length(min=2, max=100)])
     submit = SubmitField('Post')
 
+    def validate_title(self, title):
+        rows = db_interface.read_rows('post', cond=('title', title.data))
+
+        if len(rows) != 0:
+            raise ValidationError('A post with that title exists; please choose a different one.')
 
     def validate_category(self, category):
         rows = db_interface.read_rows('category', cond=('title', category.data))
