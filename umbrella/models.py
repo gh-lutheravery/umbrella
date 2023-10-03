@@ -113,8 +113,18 @@ class Post(DBModel):
 
         return post
 
-    def _get_posts(self, limit, post_filter=None):
+    def _get_posts(self, limit, post_filter=None, use_like=False):
         if post_filter:
+            if use_like:
+                rows = db_interface.read_rows(self.table_name, cond=post_filter, limit=limit, use_like=False)
+                posts = []
+
+                for r in rows:
+                    post = self._populate_post(r)
+                    posts.append(post)
+
+                return posts
+
             rows = db_interface.read_rows(self.table_name, cond=post_filter, limit=limit)
             posts = []
 
@@ -133,8 +143,12 @@ class Post(DBModel):
 
         return posts
 
-    def query_posts(self, post_filter=None, limit=20):
+    def query_posts(self, post_filter=None, limit=20, use_like=False):
         if post_filter:
+            if use_like:
+                posts = self._get_posts(limit, post_filter, use_like=True)
+                return posts
+
             posts = self._get_posts(limit, post_filter)
             return posts
 
