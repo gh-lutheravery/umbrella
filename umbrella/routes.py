@@ -6,6 +6,7 @@ from umbrella.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostF
 import umbrella.models as models
 import umbrella.db_interface as db_interface
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_paginate import Pagination
 
 
 @app.route("/")
@@ -192,15 +193,11 @@ def search():
     search_query = request.args.get('query', default=None)
     if not(search_query):
         abort(400)
+    page = request.args.get('page', default=1, type=int)
 
     posts = read_or_abort_p(('title', search_query))
+    pagination = Pagination(page=page, total=posts.count())
 
-    last_page = models.Pagination.get_last_page(len(posts), 15)
-    page = request.args.get('page', default=0, type=int)
-    if page > last_page:
-        abort(404)
-
-    paginated_posts = models.get_paginated_items(posts, per_page=15, page=page)
     return render_template('search.html',
                            title=search_query + ' Search Results',
-                           posts=paginated_posts, last_page=last_page, query=search_query)
+                           posts=posts, pagination=pagination, query=search_query)
