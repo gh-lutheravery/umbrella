@@ -116,7 +116,7 @@ class Post(DBModel):
     def _get_posts(self, limit, post_filter=None, use_like=False):
         if post_filter:
             if use_like:
-                rows = db_interface.read_rows(self.table_name, cond=post_filter, limit=limit, use_like=False)
+                rows = db_interface.read_rows(self.table_name, cond=post_filter, limit=limit, use_like=True)
                 posts = []
 
                 for r in rows:

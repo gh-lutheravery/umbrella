@@ -41,12 +41,13 @@ def run_query(query: str, params=None, field_param=None):
 
 def read_rows(table_name, limit=None, cond=None, use_like=False):
     if cond:
+        params = [cond[1]]
         if use_like:
-            query = "SELECT * FROM " + table_name + " WHERE {} LIKE %%s% AND is_deleted = False"
+            query = "SELECT * FROM " + table_name + " WHERE {} LIKE %s AND is_deleted = False"
+            params = [f'%{cond[1]}%']
         else:
             query = "SELECT * FROM " + table_name + " WHERE {} = %s AND is_deleted = False"
 
-        params = [cond[1]]
         field_param = cond[0]
 
         if limit:
