@@ -36,6 +36,10 @@ ul {
   margin-bottom: 20px;
 }
 
+.umbrella-form {
+  width: 40vw;
+}
+
 .article-title {
   color: #444444;
 }
