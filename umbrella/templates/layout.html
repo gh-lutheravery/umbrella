@@ -58,8 +58,8 @@
                     </li>
                 {% endif %}
               </ul>
-              <form class="form-inline my-2 my-md-0">
-                <input class="form-control text-dark" type="text" placeholder="Search" aria-label="Search">
+              <form class="form-inline my-2 my-md-0" action="{{ url_for('search') }}" method="get">
+                <input class="form-control text-dark" name="query" type="text" placeholder="Search" aria-label="Search">
               </form>
             </div>
           </div>
@@ -68,7 +68,6 @@
 
     <main role="main" class="container">
       <div class="row">
-        <div class="col-md-8">
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}
@@ -79,7 +78,6 @@
             {% endif %}
           {% endwith %}
           {% block content %}{% endblock %}
-        </div>
 
       </div>
     </main>
