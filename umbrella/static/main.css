@@ -40,6 +40,10 @@ ul {
   width: 40vw;
 }
 
+.umbrella-form-long {
+  width: 60vw;
+}
+
 .article-title {
   color: #444444;
 }
