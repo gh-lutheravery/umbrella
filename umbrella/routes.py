@@ -192,6 +192,12 @@ def delete_post(post_id):
     return redirect(url_for('home'))
 
 
+@app.route("/post/<int:post_id>/view")
+def increment_post_view_count(post_id):
+    db_interface.update_row(['view_count'], [], 'post', ('id', post_id),
+                            default_col='view_count')
+
+
 @app.route("/search-results")
 def search():
     search_query = request.args.get('query', default=None)
