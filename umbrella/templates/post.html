@@ -2,7 +2,7 @@
 {% block content %}
 {{ ckeditor.load() }}
     <div class="col-md-8">
-        <article class="media content-section">
+        <article class="media content-section" id="umbrella-article">
             <div class="media-body">
               <div class="article-metadata">
                 <a class="mr-2" href="{{ url_for('profile', profile_id=post_comment.post.author.id) }}">{{ post_comment.post.author.username }}</a>
@@ -58,7 +58,7 @@
 
   <!-- Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="deleteModalLabel">Delete post?</h5>
@@ -73,6 +73,38 @@
           </form>
         </div>
       </div>
+     </div>
     </div>
-  </div>
+
+    <script>
+        $(document).ready(
+        function() {
+            // Set a flag to know if a ajax request is already being processed
+            var sendingView = false;
+
+            $('#umbrella-article').scroll(
+            function() {
+                var div = $(this);
+
+                var distanceFromBottom = div[0].scrollHeight - div.scrollTop() - div.outerHeight();
+
+                // Check if the user has scrolled to the end
+                if (distanceFromBottom < 50 && !sendingView) {
+                    sendingView = true;
+                    $.ajax({
+                        url: '{{ url_for('increment_post_view_count', post_id=post_comment.post.id) }}',
+                        method: 'GET',
+                        success: function(response) {
+                            sendingView = false;
+                        },
+                        error: function() {
+                            console.log('Error count post view.');
+                            sendingView = false;
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
 {% endblock content %}
