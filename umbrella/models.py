@@ -111,6 +111,9 @@ class Post(DBModel):
         post.created_at = created_at
         post.set_id(id)
 
+        post.author_id = author_id
+        post.category_id = category_id
+
         return post
 
     def _get_posts(self, limit, post_filter=None, use_like=False):
