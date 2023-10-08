@@ -78,6 +78,7 @@
      </div>
     </div>
 
+    {% if post_comment.post.author != current_user %}
     <script>
         var $j = jQuery.noConflict();
         $j(document).ready(function() {
@@ -101,5 +102,6 @@
             );
         });
     </script>
+    {% endif %}
 
 {% endblock content %}
