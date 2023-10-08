@@ -72,6 +72,7 @@
         <div class="d-block">
            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
+            <div id="umbrella-msg-box">
               {% for category, message in messages %}
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
@@ -82,12 +83,23 @@
                   </div>
                 </div>
               {% endfor %}
+            </div>
             {% endif %}
             {% endwith %}
         </div>
       {% block content %}{% endblock %}
       </div>
     </main>
+
+    <script>
+        var $j = jQuery.noConflict();
+        $j(document).ready(function(){
+            var msgBox = $j('#umbrella-msg-box');
+            if (msgBox) {
+                msgBox.delay(5000).fadeOut(1000);
+            }
+        });
+    </script>
 
 
     <!-- Optional JavaScript -->
