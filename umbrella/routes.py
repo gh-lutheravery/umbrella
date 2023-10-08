@@ -103,6 +103,7 @@ def update_profile():
 
     return render_template('update_profile.html', title='Profile', form=form)
 
+
 @app.route("/create-post", methods=['GET', 'POST'])
 @login_required
 def create_post():
@@ -126,6 +127,7 @@ def create_post():
 
     return render_template('create_post.html', title='New Post', form=form)
 
+
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 def post(post_id):
     form = CommentForm()
@@ -145,6 +147,7 @@ def post(post_id):
     return render_template('post.html', title=post_comment.post.title,
                            post_comment=post_comment, form=form)
 
+
 def read_or_abort_p(filter, use_like=False):
     if use_like:
         posts = models.Post().query_posts(filter, use_like=True)
@@ -154,6 +157,7 @@ def read_or_abort_p(filter, use_like=False):
     if len(posts) == 0:
         abort(404, description="Post not found")
     return posts
+
 
 @app.route("/post/<int:post_id>/update", methods=['GET', 'POST'])
 @login_required
@@ -179,6 +183,7 @@ def update_post(post_id):
 
     return render_template('create_post.html', title='Update Post', form=form)
 
+
 @app.route("/post/<int:post_id>/delete", methods=['POST'])
 @login_required
 def delete_post(post_id):
@@ -194,15 +199,16 @@ def delete_post(post_id):
 
 @app.route("/post/<int:post_id>/view")
 def increment_post_view_count(post_id):
-    print('yes')
-    #db_interface.update_row(['view_count'], [], 'post', ('id', post_id),
-                            #default_col='view_count')
+    db_interface.update_row(['view_count'], [], 'post', ('id', post_id),
+                            default_col='view_count')
+
+    return "View count incremented"
 
 
 @app.route("/search-results")
 def search():
     search_query = request.args.get('query', default=None)
-    if not(search_query):
+    if not (search_query):
         abort(400)
     page = request.args.get('page', default=1, type=int)
 
