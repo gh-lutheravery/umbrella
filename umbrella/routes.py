@@ -164,7 +164,7 @@ def read_or_abort_p(filter, use_like=False):
 def update_post(post_id):
     post = read_or_abort_p(('id', post_id))[0]
 
-    if post.author_id != current_user.id:
+    if post.author != current_user:
         # user is forbidden
         abort(403)
     form = PostForm()
@@ -174,9 +174,9 @@ def update_post(post_id):
         new_post.title = form.title.data
         new_post.content = form.content.data
 
-        db_interface.update_row_obj(new_post, post.table_name, ('id', post_id))
+        db_interface.update_row_obj(new_post, post.table_name, ('id', post.id))
         flash('Post has been updated.')
-        return redirect(url_for('post', post_id=post_id))
+        return redirect(url_for('post', post_id=post.id))
     elif request.method == 'GET':
         form.title.data = post.title
         form.content.data = post.content
