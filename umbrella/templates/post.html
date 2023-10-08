@@ -30,7 +30,7 @@
 
                         {{ form.content.label(class="form-label") }}
                         {{ form.content(class="form-control", placeholder="Type comment...") }}
-                        {{ form.submit() }}
+                        {{ form.submit(class_="mt-1") }}
                     </form>
                 </div>
 
@@ -100,30 +100,6 @@
                 60000
             );
         });
-
-
-
-        /*
-        $(document).ready(
-        function() {
-            // Set a flag to know if a ajax request is already being processed
-            var sendingView = false;
-            console.log('1');
-            $("#umbrella-article").on("scroll",
-            function() {
-                var div = $(this);
-                console.log('2');
-                var distanceFromBottom = div[0].scrollHeight - div.scrollTop() - div.outerHeight();
-
-                // Check if the user has scrolled to the end
-                if (distanceFromBottom < 50 && !sendingView) {
-                    console.log('3');
-                    sendingView = true;
-
-                }
-            });
-        });
-        */
     </script>
 
 {% endblock content %}
