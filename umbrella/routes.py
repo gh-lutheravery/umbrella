@@ -212,7 +212,7 @@ def search():
         abort(400)
     page = request.args.get('page', default=1, type=int)
 
-    posts = read_or_abort_p(('title', search_query), use_like=True)
+    posts = models.Post().query_posts(('title', search_query), use_like=True)
 
     pagination = Pagination(page=page, per_page=10, total=len(posts))
 
