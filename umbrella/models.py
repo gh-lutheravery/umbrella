@@ -224,21 +224,10 @@ class Comment(DBModel):
 
     def query_comments(self, comment_filter=None):
         if comment_filter:
-            row = db_interface.read_rows(self.table_name, cond=comment_filter)
+            rows = db_interface.read_rows(self.table_name, cond=comment_filter)
+        else:
+            rows = db_interface.read_rows(self.table_name)
 
-            if len(row) > 0:
-                id, content, created_at, author_id, post_id, _ = row[0]
-                author = User().query_users(('id', author_id))[0]
-
-                com = Comment(content, author, post_id)
-                com.created_at = created_at
-                com.set_id(id)
-
-                return [com]
-
-            return []
-
-        rows = db_interface.read_rows(self.table_name)
         coms = []
         for r in rows:
             id, content, created_at, author_id, post_id, _ = r
@@ -255,7 +244,6 @@ class Comment(DBModel):
 class PostComment():
     def __init__(self, post_id):
         self.post = Post().query_posts(('id', post_id))[0]
-        print('len: ', len(Post().query_posts(('id', post_id))))
         self.comments = self._query_post_comments()
 
     def _query_post_comments(self):
