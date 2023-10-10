@@ -54,10 +54,11 @@ class User(DBModel, UserMixin):
             rows = db_interface.read_rows('profile')
 
         users = []
+        print(rows)
         for r in rows:
-            id, username, email, _, bio, join_date, _ = r
+            id, username, email, password, bio, join_date, _ = r
 
-            user = User(username, None, email, bio)
+            user = User(username, password, email, bio)
             user.created_at = join_date
             user.set_id(id)
 
