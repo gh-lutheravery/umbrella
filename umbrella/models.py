@@ -47,20 +47,12 @@ class User(DBModel, UserMixin):
     def __str__(self):
         return self.username.get_content() + ' User'
 
-
     def query_users(self, user_filter=None):
         if user_filter:
-            row = db_interface.read_rows('profile', cond=user_filter)
+            rows = db_interface.read_rows('profile', cond=user_filter)
+        else:
+            rows = db_interface.read_rows('profile')
 
-            id, username, email, password, bio, join_date, _ = row[0]
-
-            user = User(username, password, email, bio)
-            user.created_at = join_date
-            user.set_id(id)
-
-            return [user]
-
-        rows = db_interface.read_rows('profile')
         users = []
         for r in rows:
             id, username, email, _, bio, join_date = r
