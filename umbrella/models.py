@@ -55,7 +55,7 @@ class User(DBModel, UserMixin):
 
         users = []
         for r in rows:
-            id, username, email, _, bio, join_date = r
+            id, username, email, _, bio, join_date, _ = r
 
             user = User(username, None, email, bio)
             user.created_at = join_date
