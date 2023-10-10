@@ -60,7 +60,6 @@
                 {% endif %}
               </ul>
               <form class="form-inline my-2 my-md-0" action="{{ url_for('search') }}" method="get">
-                {{ form.hidden_tag() }}
                 <input class="form-control text-dark" name="query" type="text" placeholder="Search" aria-label="Search">
               </form>
             </div>
