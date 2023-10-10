@@ -232,9 +232,11 @@ class Comment(DBModel):
         for r in rows:
             id, content, created_at, author_id, post_id, _ = r
 
-            com = Comment(content, author_id, post_id)
+            author = User().query_users(('id', author_id))[0]
+            com = Comment(content, author, post_id)
             com.created_at = created_at
-            com.set_id(id)
+            com.id = id
+            com.author_id = author_id
 
             coms.append(com)
 
