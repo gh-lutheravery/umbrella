@@ -54,7 +54,6 @@ class User(DBModel, UserMixin):
             rows = db_interface.read_rows('profile')
 
         users = []
-        print(rows)
         for r in rows:
             id, username, email, password, bio, join_date, _ = r
 
